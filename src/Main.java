@@ -1,5 +1,8 @@
+import Genetic.GeneticAlgorithm;
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        GeneticAlgorithm g = new GeneticAlgorithm("");
+        //System.out.println("Hello world!");
+
     }
 }

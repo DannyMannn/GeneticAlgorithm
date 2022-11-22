@@ -1,3 +1,5 @@
+package Genetic;
+
 public class Individual {
     // TOPOLOGY HYPER-PARAMETERS
     private String numNeurons;
