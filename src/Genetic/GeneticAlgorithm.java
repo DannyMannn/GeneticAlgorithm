@@ -11,7 +11,7 @@ public class GeneticAlgorithm {
 
     public GeneticAlgorithm(String file){
         this.f = new FileHandler(file);         //Nombre del primer archivo
-        this.generation = new Individual[55];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
+        this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
         this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)
     }
 
