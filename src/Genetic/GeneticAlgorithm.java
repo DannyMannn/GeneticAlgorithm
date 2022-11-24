@@ -3,6 +3,8 @@ package Genetic;
 import File.FileHandler;
 import Genetic.Individual;
 
+import java.util.List;
+
 public class GeneticAlgorithm {
 
     private FileHandler f;
@@ -41,8 +43,71 @@ public class GeneticAlgorithm {
         */
     }
 
-    public void evaluate(){//Evalua todos los hiperparametros del arreglo generation
+    private void mate(Individual[][] couples){
+        Individual p = new Individual(); //auxiliar individual for assign it to the matrix
+        int n = 0; //getting the middle of the hiperparam
+        String temp; //temporal string for "bit exchange"
 
+        //getting just one child per couple
+        //each hiperParam gets an one-point crossover
+        for(int i=0;i< couples.length; i++){ //iterate trough the rows
+            temp="";
+               //numNeurons
+            n = couples[i][0].getNumNeuronsString().length();
+            temp = couples[i][0].getNumNeuronsString().substring(0,n/2);
+
+            n = couples[i][1].getNumNeuronsString().length();
+            temp.concat(couples[i][1].getNumNeuronsString().substring((n/2)+1,n));
+            p.setNumNeuronsString(temp);
+                //HiddenLayers
+            n= couples[i][0].getNumHiddenLayersString().length();
+            temp = couples[i][0].getNumHiddenLayersString().substring(0,n/2);
+
+            n = couples[i][1].getNumNeuronsString().length();
+            temp.concat(couples[i][1].getNumHiddenLayersString().substring((n/2)+1,n));
+            p.setNumHiddenLayersString(temp);
+                //Epochs
+            n= couples[i][0].getNumEpochsString().length();
+            temp = couples[i][0].getNumEpochsString().substring(0,n/2);
+
+            n = couples[i][1].getNumEpochsString().length();
+            temp.concat(couples[i][1].getNumEpochsString().substring((n/2)+1,n));
+            p.setNumEpochsString(temp);
+            //L.R.
+            n = couples[i][0].getLearningRateString().length();
+            temp = couples[i][0].getLearningRateString().substring(0,n/2);
+
+            n = couples[i][1].getLearningRateString().length();
+            temp.concat(couples[i][1].getLearningRateString().substring((n/2)+1,n));
+            p.setLearningRateString(temp);
+            //Momentum
+            n = couples[i][0].getMomentumString().length();
+            temp = couples[i][0].getMomentumString().substring(0,n/2);
+
+            n = couples[i][1].getMomentumString().length();
+            temp.concat(couples[i][1].getMomentumString().substring((n/2)+1,n));
+            p.setMomentumString(temp);
+
+            couples[i][2] = p;
+        }
+
+
+    }
+    public void evaluate(List<Individual> parents){//Evalua todos los hiperparametros del arreglo generation
+        //[parent1][parent2][child]
+        Individual [][]couples = new Individual[15][3]; //15 rows and  3 cols
+        int max = 15; int min = 0; int k;
+        int random_int;
+        //Creating the couples
+        for(int i=0; i<30;i++){//30 couples created
+            k=0;
+            for(int j=0; j<2;j++){
+                random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+                couples[i][k] = parents.get(random_int);
+                k++;
+            }
+        }
+        mate(couples);
     }
 
     public void sortGeneration(){//Ordena la lista de accurracy de mejor a peor
