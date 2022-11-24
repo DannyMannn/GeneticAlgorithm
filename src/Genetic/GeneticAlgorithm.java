@@ -93,7 +93,7 @@ public class GeneticAlgorithm {
 
 
     }
-    public void evaluate(List<Individual> parents){//Evalua todos los hiperparametros del arreglo generation
+    public void selectPairs(List<Individual> parents){//select the couples, lol
         //[parent1][parent2][child]
         Individual [][]couples = new Individual[15][3]; //15 rows and  3 cols
         int max = 15; int min = 0; int k;
@@ -109,7 +109,9 @@ public class GeneticAlgorithm {
         }
         mate(couples);
     }
+    public void evaluate(){
 
+    }
     public void sortGeneration(){//Ordena la lista de accurracy de mejor a peor
 
     }
