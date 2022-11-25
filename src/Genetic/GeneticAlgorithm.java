@@ -2,19 +2,30 @@ package Genetic;
 
 import File.FileHandler;
 import Genetic.Individual;
-
 import java.util.List;
+import weka.classifiers.functions.MultilayerPerceptron;
+import weka.core.Instances;
+import weka.classifiers.evaluation.Evaluation;
+import java.io.*;
 
 public class GeneticAlgorithm {
 
     private FileHandler f;
     private Individual generation[];
     private int n;
+    private MultilayerPerceptron mlp;
 
     public GeneticAlgorithm(String file){
         this.f = new FileHandler(file);         //Nombre del primer archivo
         this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
         this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)
+        this.mlp = new MultilayerPerceptron();
+    }
+
+    public GeneticAlgorithm(){
+        this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
+        this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)
+        this.mlp = new MultilayerPerceptron();
     }
 
     public void generarPoblacion(){
@@ -110,9 +121,52 @@ public class GeneticAlgorithm {
         mate(couples);
     }
     public void evaluate(){
-
+        try {
+            Instances train;
+            Evaluation eval;
+            FileReader file1,file2;
+            for (int i = 0; i < n; i++) {
+                file1 = new FileReader("fold1.arff");
+                train = new Instances(file1);
+                train.setClassIndex(train.numAttributes()-1);
+                mlp.setLearningRate(generation[i].getLearningRateDouble());
+                mlp.setMomentum(generation[i].getMomentumDouble());
+                mlp.setTrainingTime(generation[i].getNumEpochsInt());
+                mlp.setHiddenLayers(generation[i].getNumHiddenLayersString());
+                mlp.buildClassifier(train);
+                file1.close();
+                file2 = new FileReader("fold2.arff");
+                train = new Instances(file2);
+                train.setClassIndex(train.numAttributes()-1);
+                eval = new Evaluation(train);
+                eval.evaluateModel(mlp,train);
+                System.out.println(eval.pctCorrect());
+                generation[i].setAccuracy(eval.pctCorrect());
+                file2.close();
+            }
+            quicksortGeneration(generation,0,n-1);
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
     }
-    public void sortGeneration(){//Ordena la lista de accurracy de mejor a peor
 
+    public static void quicksortGeneration(Individual A[], int izq, int der) {
+        double aux, piv = A[izq].getAccuracy();
+        int i=izq,j=der;
+        while(i < j){
+            while(A[i].getAccuracy() >= piv && i < j) i++;
+            while(A[j].getAccuracy() < piv) j--;
+            if (i < j) {
+                aux= A[i].getAccuracy();
+                A[i].setAccuracy(A[j].getAccuracy());
+                A[j].setAccuracy(aux);
+            }
+        }
+        A[izq].setAccuracy(A[j].getAccuracy());
+        A[j].setAccuracy(piv);
+        if(izq < j-1)
+            quicksortGeneration(A,izq,j-1);
+        if(j+1 < der)
+            quicksortGeneration(A,j+1,der);
     }
 }

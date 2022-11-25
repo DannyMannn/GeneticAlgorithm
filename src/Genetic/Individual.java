@@ -9,9 +9,9 @@ public class Individual {
     private String momentumString;
 
     // TOPOLOGY HYPER-PARAMETERS
-    private double numNeuronsDouble;
-    private double numHiddenLayersDouble;
-    private double numEpochsDouble;
+    private int numNeuronsInt;
+    private int numHiddenLayersInt;
+    private int numEpochsInt;
     private double learningRateDouble;
     private double momentumDouble;
 
@@ -44,15 +44,23 @@ public class Individual {
         this.setDefaultRanges();
     }
 
-    public Individual(double numNeurons, double numHiddenLayers, double numEpochs, double learningRate, double momentum){
-        this.setTopologyDouble(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);
+
+
+    public Individual(int numNeurons, int numHiddenLayers, int numEpochs, double learningRate, double momentum){
+        this.setTopologyMLP(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);
         this.setDefaultRanges();
     }
 
-    public void setTopologyDouble(double numNeurons, double numHiddenLayers, double numEpochs, double learningRate, double momentum){
-        this.setNumNeuronsDouble(numNeurons);
-        this.setNumHiddenLayersDouble(numHiddenLayers);
-        this.setNumEpochsDouble(numEpochs);
+    public Individual(double accuracy){
+        this.accuracy = accuracy;
+        this.setDefaultRanges();
+    }
+
+    //Set de values as mlp request
+    public void setTopologyMLP(int numNeurons, int numHiddenLayers, int numEpochs, double learningRate, double momentum){
+        this.setNumNeuronsInt(numNeurons);
+        this.setNumHiddenLayersInt(numHiddenLayers);
+        this.setNumEpochsInt(numEpochs);
         this.setLearningRateDouble(learningRate);
         this.setMomentumDouble(momentum);
     }
@@ -73,13 +81,13 @@ public class Individual {
      * @return boolean that indicates whether the geneticSequence is valid
      */
     public boolean validate(){
-        if(!(numNeuronsDouble >= minNumNeurons && numNeuronsDouble <= maxNumNeurons))
+        if(!(numNeuronsInt >= minNumNeurons && numNeuronsInt <= maxNumNeurons))
             return false;
 
-        if(!(numHiddenLayersDouble >= minNumHiddenLayers && numHiddenLayersDouble <= maxNumHiddenLayers))
+        if(!(numHiddenLayersInt >= minNumHiddenLayers && numHiddenLayersInt <= maxNumHiddenLayers))
             return false;
 
-        if (!(numEpochsDouble >= minNumEpochs && numEpochsDouble <= maxNumEpochs))
+        if (!(numEpochsInt >= minNumEpochs && numEpochsInt <= maxNumEpochs))
             return false;
 
         if (Double.compare(learningRateDouble, 0.11d) != 0 || Double.compare(learningRateDouble, 0.13d) != 0
@@ -138,17 +146,17 @@ public class Individual {
 
     public void setNumNeuronsString(String numNeurons) {
         this.numNeuronsString = numNeurons;
-        this.numNeuronsDouble = Integer.parseInt(numNeurons, 2);
+        this.numNeuronsInt = Integer.parseInt(numNeurons, 2);
     }
 
     public void setNumHiddenLayersString(String numHiddenLayers) {
         this.numHiddenLayersString = numHiddenLayers;
-        this.numHiddenLayersDouble = Integer.parseInt(numHiddenLayers, 2);
+        this.numHiddenLayersInt = Integer.parseInt(numHiddenLayers, 2);
     }
 
     public void setNumEpochsString(String numEpochs) {
         this.numEpochsString = numEpochs;
-        this.numEpochsDouble = Integer.parseInt(numEpochs, 2);
+        this.numEpochsInt = Integer.parseInt(numEpochs, 2);
     }
 
     public void setLearningRateString(String learningRate) {
@@ -163,18 +171,18 @@ public class Individual {
 
 
 
-    public void setNumNeuronsDouble(double numNeurons) {
-        this.numNeuronsDouble = numNeurons;
+    public void setNumNeuronsInt(int numNeurons) {
+        this.numNeuronsInt = numNeurons;
         this.numNeuronsString = this.doubleToBinaryString(numNeurons);
     }
 
-    public void setNumHiddenLayersDouble(double numHiddenLayers) {
-        this.numHiddenLayersDouble = numHiddenLayers;
+    public void setNumHiddenLayersInt(int numHiddenLayers) {
+        this.numHiddenLayersInt = numHiddenLayers;
         this.numHiddenLayersString = this.doubleToBinaryString(numHiddenLayers);
     }
 
-    public void setNumEpochsDouble(double numEpochs) {
-        this.numEpochsDouble = numEpochs;
+    public void setNumEpochsInt(int numEpochs) {
+        this.numEpochsInt = numEpochs;
         this.numEpochsString = this.doubleToBinaryString(numEpochs);
     }
 
@@ -215,16 +223,16 @@ public class Individual {
     }
 
 
-    public double getNumNeuronsDouble() {
-        return numNeuronsDouble;
+    public double getNumNeuronsInt() {
+        return numNeuronsInt;
     }
 
-    public double getNumHiddenLayersDouble() {
-        return numHiddenLayersDouble;
+    public double getNumHiddenLayersInt() {
+        return numHiddenLayersInt;
     }
 
-    public double getNumEpochsDouble() {
-        return numEpochsDouble;
+    public int getNumEpochsInt() {
+        return numEpochsInt;
     }
 
     public double getLearningRateDouble() {
@@ -237,6 +245,23 @@ public class Individual {
 
     public double getAccuracy() {
         return accuracy;
+    }
+
+    public String getNumHiddenLayersStringMLP(){
+        String numHiddenLayersMLP="";
+        for (int i = 0; i < this.numHiddenLayersInt; i++) {
+            numHiddenLayersMLP += Integer.toString(this.numNeuronsInt);
+            if(i!=numHiddenLayersInt-1){
+                numHiddenLayersMLP += ",";
+            }
+        }
+        return numHiddenLayersMLP;
+    }
+
+    @Override
+    public String toString(){
+        return "Binary Strings: "+numNeuronsString+", "+numHiddenLayersString+", "+numEpochsString+", "+learningRateString+", "+momentumString+", \n"+
+                "MLP values: "+numNeuronsInt+", "+numHiddenLayersInt+" ( "+getNumHiddenLayersStringMLP()+" ), "+numEpochsInt+", "+learningRateDouble+", "+momentumDouble+", ";
     }
 
 }

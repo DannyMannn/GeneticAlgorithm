@@ -11,19 +11,15 @@ public class FileHandler {
     public FileHandler(String fileName){
         this.fileName = fileName;
         try{
-            fileR = new FileReader(fileName);
-            fileW = new FileWriter(fileName);
         }catch(Exception ex){
             System.out.println(ex);
         }
     }
 
 
-
     public FileReader getFileR(){
         return fileR;
     }
-
     public FileWriter getFileW(){
         return fileW;
     }
@@ -35,6 +31,5 @@ public class FileHandler {
     public String getLine(int index){
         return "cadena";
     }
-
 
 }

@@ -1,0 +1,316 @@
+Index: src/Genetic/Individual.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Genetic;\r\n\r\npublic class Individual {\r\n    // TOPOLOGY HYPER-PARAMETERS\r\n    private String numNeuronsString;\r\n    private String numHiddenLayersString;\r\n    private String numEpochsString;\r\n    private String learningRateString;\r\n    private String momentumString;\r\n\r\n    // TOPOLOGY HYPER-PARAMETERS\r\n    private double numNeuronsDouble;\r\n    private double numHiddenLayersDouble;\r\n    private double numEpochsDouble;\r\n    private double learningRateDouble;\r\n    private double momentumDouble;\r\n\r\n    // VALID RANGES OF THE TOPOLOGY OF THE MULTILAYER PERCEPTRON NEURAL NETWORK\r\n    private double minNumNeurons;\r\n    private double maxNumNeurons;\r\n    private double minNumHiddenLayers;\r\n    private double maxNumHiddenLayers;\r\n    private double minNumEpochs;\r\n    private double maxNumEpochs;\r\n    private double minLearningRate;\r\n    private double maxLearningRate;\r\n    private double minMomentum;\r\n    private double maxMomentum;\r\n\r\n    private double accuracy;\r\n\r\n    public Individual(){\r\n        this.numNeuronsString = new String();\r\n        this.numHiddenLayersString = new String();\r\n        this.numEpochsString = new String();\r\n        this.learningRateString = new String();\r\n        this.momentumString = new String();\r\n\r\n        this.setDefaultRanges();\r\n    }\r\n\r\n    public Individual(String numNeurons, String numHiddenLayers, String numEpochs, String learningRate, String momentum){\r\n        this.setTopologyBinaryString(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);\r\n        this.setDefaultRanges();\r\n    }\r\n\r\n    public Individual(double numNeurons, double numHiddenLayers, double numEpochs, double learningRate, double momentum){\r\n        this.setTopologyDouble(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);\r\n        this.setDefaultRanges();\r\n    }\r\n\r\n    public void setTopologyDouble(double numNeurons, double numHiddenLayers, double numEpochs, double learningRate, double momentum){\r\n        this.setNumNeuronsDouble(numNeurons);\r\n        this.setNumHiddenLayersDouble(numHiddenLayers);\r\n        this.setNumEpochsDouble(numEpochs);\r\n        this.setLearningRateDouble(learningRate);\r\n        this.setMomentumDouble(momentum);\r\n    }\r\n\r\n    public void setTopologyBinaryString(String numNeurons, String numHiddenLayers, String numEpochs, String learningRate, String momentum){\r\n        this.setNumNeuronsString(numNeurons);\r\n        this.setNumHiddenLayersString(numHiddenLayers);\r\n        this.setNumEpochsString(numEpochs);\r\n        this.setLearningRateString(learningRate);\r\n        this.setMomentumString(momentum);\r\n    }\r\n\r\n    /***********START OF IMPORTANT SECTION**************/\r\n    /**\r\n     * validates whether the geneticSequence of this individual is within the\r\n     * range of the previously specified range of the topology of the Neural Network.\r\n     * The values used for this project are specified in setDefaultRanges()\r\n     * @return boolean that indicates whether the geneticSequence is valid\r\n     */\r\n    public boolean validate(){\r\n        if(!(numNeuronsDouble >= minNumNeurons && numNeuronsDouble <= maxNumNeurons))\r\n            return false;\r\n\r\n        if(!(numHiddenLayersDouble >= minNumHiddenLayers && numHiddenLayersDouble <= maxNumHiddenLayers))\r\n            return false;\r\n\r\n        if (!(numEpochsDouble >= minNumEpochs && numEpochsDouble <= maxNumEpochs))\r\n            return false;\r\n\r\n        if (Double.compare(learningRateDouble, 0.11d) != 0 || Double.compare(learningRateDouble, 0.13d) != 0\r\n                || Double.compare(learningRateDouble, 0.15d) != 0 || Double.compare(learningRateDouble, 0.17d) != 0)\r\n            return false;\r\n\r\n        if(Double.compare(momentumDouble, 0.08d) != 0 || Double.compare(momentumDouble, 0.10d) != 0\r\n                || Double.compare(momentumDouble, 0.12d) != 0 || Double.compare(momentumDouble, 0.14d) != 0\r\n                || Double.compare(momentumDouble, 0.16d) != 0|| Double.compare(momentumDouble, 0.18d) != 0)\r\n            return false;\r\n\r\n        return true;\r\n    }\r\n\r\n    public String getGeneticSequence(){\r\n        return this.numNeuronsString + this.numHiddenLayersString + this.numEpochsString + this.learningRateString + this.momentumString;\r\n    }\r\n\r\n    public String doubleToBinaryString(double number){\r\n        int numberInt = (int) number;\r\n        return Integer.toBinaryString(numberInt);\r\n    }\r\n\r\n    /***********END OF IMPORTANT SECTION**************/\r\n\r\n    private void setDefaultRanges(){\r\n        this.minNumNeurons = 8;\r\n        this.maxNumNeurons = 18;\r\n        this.minNumHiddenLayers = 1;\r\n        this.maxNumHiddenLayers = 3;\r\n        this.minNumEpochs = 90;\r\n        this.maxNumEpochs = 140;\r\n        this.minLearningRate = 0.11;\r\n        this.maxLearningRate = 0.17;\r\n        this.minMomentum = 0.08;\r\n        this.maxMomentum = 0.18;\r\n    }\r\n\r\n    public void setRanges(byte minNumNeurons, byte maxNumNeurons,\r\n                          byte minNumHiddenLayers, byte maxNumHiddenLayers,\r\n                          short minNumEpochs, short maxNumEpochs,\r\n                          double minLearningRate, double maxLearningRate,\r\n                          double minMomentum, double maxMomentum){\r\n        this.minNumNeurons = minNumNeurons;\r\n        this.maxNumNeurons = maxNumNeurons;\r\n        this.minNumHiddenLayers = minNumHiddenLayers;\r\n        this.maxNumHiddenLayers = maxNumHiddenLayers;\r\n        this.minNumEpochs = minNumEpochs;\r\n        this.maxNumEpochs = maxNumEpochs;\r\n        this.minLearningRate = minLearningRate;\r\n        this.maxLearningRate = maxLearningRate;\r\n        this.minMomentum = minMomentum;\r\n        this.maxMomentum = maxMomentum;\r\n    }\r\n\r\n\r\n    public void setNumNeuronsString(String numNeurons) {\r\n        this.numNeuronsString = numNeurons;\r\n        this.numNeuronsDouble = Integer.parseInt(numNeurons, 2);\r\n    }\r\n\r\n    public void setNumHiddenLayersString(String numHiddenLayers) {\r\n        this.numHiddenLayersString = numHiddenLayers;\r\n        this.numHiddenLayersDouble = Integer.parseInt(numHiddenLayers, 2);\r\n    }\r\n\r\n    public void setNumEpochsString(String numEpochs) {\r\n        this.numEpochsString = numEpochs;\r\n        this.numEpochsDouble = Integer.parseInt(numEpochs, 2);\r\n    }\r\n\r\n    public void setLearningRateString(String learningRate) {\r\n        this.learningRateString = learningRate;\r\n        this.learningRateDouble = Integer.parseInt(learningRate, 2);\r\n    }\r\n\r\n    public void setMomentumString(String momentum) {\r\n        this.momentumString = momentum;\r\n        this.momentumDouble = Integer.parseInt(momentum, 2);\r\n    }\r\n\r\n\r\n\r\n    public void setNumNeuronsDouble(double numNeurons) {\r\n        this.numNeuronsDouble = numNeurons;\r\n        this.numNeuronsString = this.doubleToBinaryString(numNeurons);\r\n    }\r\n\r\n    public void setNumHiddenLayersDouble(double numHiddenLayers) {\r\n        this.numHiddenLayersDouble = numHiddenLayers;\r\n        this.numHiddenLayersString = this.doubleToBinaryString(numHiddenLayers);\r\n    }\r\n\r\n    public void setNumEpochsDouble(double numEpochs) {\r\n        this.numEpochsDouble = numEpochs;\r\n        this.numEpochsString = this.doubleToBinaryString(numEpochs);\r\n    }\r\n\r\n    public void setLearningRateDouble(double learningRate) {\r\n        this.learningRateDouble = learningRate;\r\n        this.learningRateString = this.doubleToBinaryString(learningRate);\r\n    }\r\n\r\n    public void setMomentumDouble(double momentum) {\r\n        this.momentumDouble = momentum;\r\n        this.momentumString = this.doubleToBinaryString(momentum);\r\n    }\r\n\r\n\r\n\r\n    public void setAccuracy(double accuracy) {\r\n        this.accuracy = accuracy;\r\n    }\r\n\r\n    public String getNumNeuronsString() {\r\n        return numNeuronsString;\r\n    }\r\n\r\n    public String getNumHiddenLayersString() {\r\n        return numHiddenLayersString;\r\n    }\r\n\r\n    public String getNumEpochsString() {\r\n        return numEpochsString;\r\n    }\r\n\r\n    public String getLearningRateString() {\r\n        return learningRateString;\r\n    }\r\n\r\n    public String getMomentumString() {\r\n        return momentumString;\r\n    }\r\n\r\n\r\n    public double getNumNeuronsDouble() {\r\n        return numNeuronsDouble;\r\n    }\r\n\r\n    public double getNumHiddenLayersDouble() {\r\n        return numHiddenLayersDouble;\r\n    }\r\n\r\n    public double getNumEpochsDouble() {\r\n        return numEpochsDouble;\r\n    }\r\n\r\n    public double getLearningRateDouble() {\r\n        return learningRateDouble;\r\n    }\r\n\r\n    public double getMomentumDouble() {\r\n        return momentumDouble;\r\n    }\r\n\r\n    public double getAccuracy() {\r\n        return accuracy;\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Genetic/Individual.java b/src/Genetic/Individual.java
+--- a/src/Genetic/Individual.java	(revision b769e714e6d4ac0aec830803db5df67efc953cd9)
++++ b/src/Genetic/Individual.java	(date 1669269125888)
+@@ -11,7 +11,7 @@
+     // TOPOLOGY HYPER-PARAMETERS
+     private double numNeuronsDouble;
+     private double numHiddenLayersDouble;
+-    private double numEpochsDouble;
++    private int numEpochsInt;
+     private double learningRateDouble;
+     private double momentumDouble;
+ 
+@@ -44,15 +44,15 @@
+         this.setDefaultRanges();
+     }
+ 
+-    public Individual(double numNeurons, double numHiddenLayers, double numEpochs, double learningRate, double momentum){
++    public Individual(double numNeurons, double numHiddenLayers, int numEpochs, double learningRate, double momentum){
+         this.setTopologyDouble(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);
+         this.setDefaultRanges();
+     }
+ 
+-    public void setTopologyDouble(double numNeurons, double numHiddenLayers, double numEpochs, double learningRate, double momentum){
++    public void setTopologyDouble(double numNeurons, double numHiddenLayers, int numEpochs, double learningRate, double momentum){
+         this.setNumNeuronsDouble(numNeurons);
+         this.setNumHiddenLayersDouble(numHiddenLayers);
+-        this.setNumEpochsDouble(numEpochs);
++        this.setNumEpochsInt(numEpochs);
+         this.setLearningRateDouble(learningRate);
+         this.setMomentumDouble(momentum);
+     }
+@@ -79,7 +79,7 @@
+         if(!(numHiddenLayersDouble >= minNumHiddenLayers && numHiddenLayersDouble <= maxNumHiddenLayers))
+             return false;
+ 
+-        if (!(numEpochsDouble >= minNumEpochs && numEpochsDouble <= maxNumEpochs))
++        if (!(numEpochsInt >= minNumEpochs && numEpochsInt <= maxNumEpochs))
+             return false;
+ 
+         if (Double.compare(learningRateDouble, 0.11d) != 0 || Double.compare(learningRateDouble, 0.13d) != 0
+@@ -148,7 +148,7 @@
+ 
+     public void setNumEpochsString(String numEpochs) {
+         this.numEpochsString = numEpochs;
+-        this.numEpochsDouble = Integer.parseInt(numEpochs, 2);
++        this.numEpochsInt = Integer.parseInt(numEpochs, 2);
+     }
+ 
+     public void setLearningRateString(String learningRate) {
+@@ -173,8 +173,8 @@
+         this.numHiddenLayersString = this.doubleToBinaryString(numHiddenLayers);
+     }
+ 
+-    public void setNumEpochsDouble(double numEpochs) {
+-        this.numEpochsDouble = numEpochs;
++    public void setNumEpochsInt(int numEpochs) {
++        this.numEpochsInt = numEpochs;
+         this.numEpochsString = this.doubleToBinaryString(numEpochs);
+     }
+ 
+@@ -223,8 +223,8 @@
+         return numHiddenLayersDouble;
+     }
+ 
+-    public double getNumEpochsDouble() {
+-        return numEpochsDouble;
++    public int getNumEpochsInt() {
++        return numEpochsInt;
+     }
+ 
+     public double getLearningRateDouble() {
+Index: src/File/FileHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package File;\r\n\r\nimport java.io.*;\r\nimport File.FileHandler;\r\n\r\npublic class FileHandler {\r\n    private String fileName;\r\n    private FileReader fileR;\r\n    private FileWriter fileW;\r\n\r\n    public FileHandler(String fileName){\r\n        this.fileName = fileName;\r\n        try{\r\n            fileR = new FileReader(fileName);\r\n            fileW = new FileWriter(fileName);\r\n        }catch(Exception ex){\r\n            System.out.println(ex);\r\n        }\r\n    }\r\n\r\n\r\n\r\n    public FileReader getFileR(){\r\n        return fileR;\r\n    }\r\n\r\n    public FileWriter getFileW(){\r\n        return fileW;\r\n    }\r\n\r\n    public void closeFileR(){\r\n        try{fileR.close();}catch(Exception ex){System.out.println(ex);}\r\n    }\r\n\r\n    public String getLine(int index){\r\n        return \"cadena\";\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/File/FileHandler.java b/src/File/FileHandler.java
+--- a/src/File/FileHandler.java	(revision b769e714e6d4ac0aec830803db5df67efc953cd9)
++++ b/src/File/FileHandler.java	(date 1669269125900)
+@@ -5,25 +5,34 @@
+ 
+ public class FileHandler {
+     private String fileName;
++    private FileReader sample1,sample2; //Muestras .arff
+     private FileReader fileR;
+     private FileWriter fileW;
+ 
+-    public FileHandler(String fileName){
++    public FileHandler(String fileName,String sample1,String sample2){
+         this.fileName = fileName;
+         try{
+-            fileR = new FileReader(fileName);
+-            fileW = new FileWriter(fileName);
++            this.fileR = new FileReader(fileName);
++            this.sample1 = new FileReader(sample1);
++            this.sample2 = new FileReader(sample2);
++            this.fileW = new FileWriter(fileName);
+         }catch(Exception ex){
+             System.out.println(ex);
+         }
+     }
+ 
+-
+-
+     public FileReader getFileR(){
+         return fileR;
+     }
+ 
++    public FileReader getSample1(){
++        return sample1;
++    }
++
++    public FileReader getSample2(){
++        return sample2;
++    }
++
+     public FileWriter getFileW(){
+         return fileW;
+     }
+@@ -36,5 +45,13 @@
+         return "cadena";
+     }
+ 
++    public String getFileName(){
++        return  fileName;
++    }
++
++    public void setFileName(String fileName){
++        this.fileName = fileName;
++    }
++
+ 
+ }
+Index: src/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import Genetic.GeneticAlgorithm;\r\npublic class Main {\r\n    public static void main(String[] args) {\r\n        GeneticAlgorithm g = new GeneticAlgorithm(\"\");\r\n        //System.out.println(\"Hello world!\");\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+--- a/src/Main.java	(revision b769e714e6d4ac0aec830803db5df67efc953cd9)
++++ b/src/Main.java	(date 1669269125912)
+@@ -1,7 +1,7 @@
+ import Genetic.GeneticAlgorithm;
+ public class Main {
+     public static void main(String[] args) {
+-        GeneticAlgorithm g = new GeneticAlgorithm("");
++        //GeneticAlgorithm g = new GeneticAlgorithm("");
+         //System.out.println("Hello world!");
+ 
+     }
+Index: src/Genetic/GeneticAlgorithm.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Genetic;\r\n\r\nimport File.FileHandler;\r\nimport Genetic.Individual;\r\n\r\nimport java.util.List;\r\n\r\npublic class GeneticAlgorithm {\r\n\r\n    private FileHandler f;\r\n    private Individual generation[];\r\n    private int n;\r\n\r\n    public GeneticAlgorithm(String file){\r\n        this.f = new FileHandler(file);         //Nombre del primer archivo\r\n        this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)\r\n        this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)\r\n    }\r\n\r\n    public void generarPoblacion(){\r\n        /*\r\n        Dentro de un ciclo\r\n            - Ciclo para almacenar los valores del archivo en el arreglo generation\r\n                n cambiará a lo largo de la ejecucion (Para manejar cuantos hiperparametros hay)\r\n                for(int i=0;i<n;i++){\r\n                        //Llamada a FileHandler para obtener renglon por renglon del archivo inicial\r\n                        //Almacenamiento de atributos de hiperparametros en la variable generation (En clase Individual)\r\n                    }\r\n            - Llamada a selectPair() (Primero llama a la función para seleccionar parejas a nuestros primeros 15 hiperparámetros)\r\n                - selectPair() almacena la linea en un array o la estructura de datos que se quiera (Tal vez arreglo de Individual)\r\n                - Selecciona los 15 mejores\r\n                - mate() Empareja al azar los 15 mejores y genera 1 hijo por pareja. Almacena a los hijos en una estructura de datos diferente al de los padres (Para distingirlos, es una idea)\r\n                    - llamada a validate() de Individual para verificar si está dentro del rango, en caso contrario, repetir\r\n                - mutate()\r\n                    - llamada a validate()\r\n                - Una vez terminado, lo agrega a un archivo (Usando la clase FileHandler)\r\n            - llamada a evaluate()\r\n            - Llamada a sortGeneration() (A partir del arreglo generation, ordenar de mejor a peor)\r\n            - Llamada a controlPopulation() Elimina los peores resultados auxiliandose de la variable n,\r\n                        es decir, mientras n>30, eliminar los peores resultados (Para que no se eliminen hiperparametros de la primera generacion)\r\n            - Llamada a FileHandler para que agregue los datos de generation a un nuevo archivo con la sitaxis numNeuronas,numHiddenLayers, numEpochs,learningRate,momentum,accuracy\r\n        - Termina ciclo\r\n        */\r\n    }\r\n\r\n    private void mate(Individual[][] couples){\r\n        Individual p = new Individual(); //auxiliar individual for assign it to the matrix\r\n        int n = 0; //getting the middle of the hiperparam\r\n        String temp; //temporal string for \"bit exchange\"\r\n\r\n        //getting just one child per couple\r\n        //each hiperParam gets an one-point crossover\r\n        for(int i=0;i< couples.length; i++){ //iterate trough the rows\r\n            temp=\"\";\r\n               //numNeurons\r\n            n = couples[i][0].getNumNeuronsString().length();\r\n            temp = couples[i][0].getNumNeuronsString().substring(0,n/2);\r\n\r\n            n = couples[i][1].getNumNeuronsString().length();\r\n            temp.concat(couples[i][1].getNumNeuronsString().substring((n/2)+1,n));\r\n            p.setNumNeuronsString(temp);\r\n                //HiddenLayers\r\n            n= couples[i][0].getNumHiddenLayersString().length();\r\n            temp = couples[i][0].getNumHiddenLayersString().substring(0,n/2);\r\n\r\n            n = couples[i][1].getNumNeuronsString().length();\r\n            temp.concat(couples[i][1].getNumHiddenLayersString().substring((n/2)+1,n));\r\n            p.setNumHiddenLayersString(temp);\r\n                //Epochs\r\n            n= couples[i][0].getNumEpochsString().length();\r\n            temp = couples[i][0].getNumEpochsString().substring(0,n/2);\r\n\r\n            n = couples[i][1].getNumEpochsString().length();\r\n            temp.concat(couples[i][1].getNumEpochsString().substring((n/2)+1,n));\r\n            p.setNumEpochsString(temp);\r\n            //L.R.\r\n            n = couples[i][0].getLearningRateString().length();\r\n            temp = couples[i][0].getLearningRateString().substring(0,n/2);\r\n\r\n            n = couples[i][1].getLearningRateString().length();\r\n            temp.concat(couples[i][1].getLearningRateString().substring((n/2)+1,n));\r\n            p.setLearningRateString(temp);\r\n            //Momentum\r\n            n = couples[i][0].getMomentumString().length();\r\n            temp = couples[i][0].getMomentumString().substring(0,n/2);\r\n\r\n            n = couples[i][1].getMomentumString().length();\r\n            temp.concat(couples[i][1].getMomentumString().substring((n/2)+1,n));\r\n            p.setMomentumString(temp);\r\n\r\n            couples[i][2] = p;\r\n        }\r\n\r\n\r\n    }\r\n    public void evaluate(List<Individual> parents){//Evalua todos los hiperparametros del arreglo generation\r\n        //[parent1][parent2][child]\r\n        Individual [][]couples = new Individual[15][3]; //15 rows and  3 cols\r\n        int max = 15; int min = 0; int k;\r\n        int random_int;\r\n        //Creating the couples\r\n        for(int i=0; i<30;i++){//30 couples created\r\n            k=0;\r\n            for(int j=0; j<2;j++){\r\n                random_int = (int)Math.floor(Math.random()*(max-min+1)+min);\r\n                couples[i][k] = parents.get(random_int);\r\n                k++;\r\n            }\r\n        }\r\n        mate(couples);\r\n    }\r\n\r\n    public void sortGeneration(){//Ordena la lista de accurracy de mejor a peor\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Genetic/GeneticAlgorithm.java b/src/Genetic/GeneticAlgorithm.java
+--- a/src/Genetic/GeneticAlgorithm.java	(revision b769e714e6d4ac0aec830803db5df67efc953cd9)
++++ b/src/Genetic/GeneticAlgorithm.java	(date 1669269693872)
+@@ -5,16 +5,23 @@
+ 
+ import java.util.List;
+ 
++import weka.classifiers.functions.MultilayerPerceptron;
++import java.util.Scanner;
++import weka.core.Instances;
++import weka.classifiers.evaluation.Evaluation;
++
+ public class GeneticAlgorithm {
+ 
+     private FileHandler f;
+     private Individual generation[];
+     private int n;
++    private MultilayerPerceptron mlp;
+ 
+-    public GeneticAlgorithm(String file){
+-        this.f = new FileHandler(file);         //Nombre del primer archivo
++    public GeneticAlgorithm(String file,String sample1, String sample2){
++        this.f = new FileHandler(file,sample1,sample2);         //Nombre del primer archivo
+         this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
+         this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)
++        mlp = new MultilayerPerceptron();
+     }
+ 
+     public void generarPoblacion(){
+@@ -90,8 +97,6 @@
+ 
+             couples[i][2] = p;
+         }
+-
+-
+     }
+     public void evaluate(List<Individual> parents){//Evalua todos los hiperparametros del arreglo generation
+         //[parent1][parent2][child]
+@@ -110,6 +115,28 @@
+         mate(couples);
+     }
+ 
++    public void getAccuracyFromFile(){
++        try {
++            Instances train;
++            for (int i = 0; i < n; i++) {
++                train = new Instances(f.getSample1());
++                train.setClassIndex(train.numAttributes()-1);
++                mlp.setLearningRate(generation[i].getLearningRateDouble());
++                mlp.setMomentum(generation[i].getMomentumDouble());
++                mlp.setTrainingTime(generation[i].getNumEpochsInt());
++                mlp.setHiddenLayers(generation[i].getNumHiddenLayersString());
++                mlp.buildClassifier(train);
++                train = new Instances(f.getSample2());
++                Evaluation eval = new Evaluation(train);
++                eval.evaluateModel(mlp,train);
++                System.out.println(eval.errorRate()); //Printing Training Mean root squared Error
++                //System.out.println(eval.toSummaryString()); //Summary of Training
++            }
++        }catch(Exception ex){
++            System.out.println(ex);
++        }
++    }
++
+     public void sortGeneration(){//Ordena la lista de accurracy de mejor a peor
+ 
+     }
+Index: GeneticAlgorithm.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"JAVA_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\r\n    <exclude-output />\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <sourceFolder url=\"file://$MODULE_DIR$/src\" isTestSource=\"false\" />\r\n    </content>\r\n    <orderEntry type=\"inheritedJdk\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/GeneticAlgorithm.iml b/GeneticAlgorithm.iml
+--- a/GeneticAlgorithm.iml	(revision b769e714e6d4ac0aec830803db5df67efc953cd9)
++++ b/GeneticAlgorithm.iml	(date 1669269125952)
+@@ -7,5 +7,6 @@
+     </content>
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
++    <orderEntry type="library" name="weka" level="project" />
+   </component>
+ </module>
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"d0f0c886-c360-46ce-b2c2-0858f9328930\" name=\"Changes\" comment=\"Changes\">\r\n      <change beforePath=\"$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"file://$PROJECT_DIR$/src/Genetic/Individual.java\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/src/File/FileHandler.java\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/src/Main.java\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java\" root0=\"FORCE_HIGHLIGHTING\" />\r\n  </component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedIndex\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2HsjnVUD0AjAToujC7VBw0Xv0l8\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"SHARE_PROJECT_CONFIGURATION_FILES\" value=\"true\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$/../../Programas\" />\r\n    <property name=\"project.structure.last.edited\" value=\"Libraries\" />\r\n    <property name=\"project.structure.proportion\" value=\"0.15\" />\r\n    <property name=\"project.structure.side.proportion\" value=\"0.2\" />\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"GeneticAlgorithm\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"d0f0c886-c360-46ce-b2c2-0858f9328930\" name=\"Changes\" comment=\"\" />\r\n      <created>1669080854238</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1669080854238</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision b769e714e6d4ac0aec830803db5df67efc953cd9)
++++ b/.idea/workspace.xml	(date 1669269125960)
+@@ -2,7 +2,13 @@
+ <project version="4">
+   <component name="ChangeListManager">
+     <list default="true" id="d0f0c886-c360-46ce-b2c2-0858f9328930" name="Changes" comment="Changes">
++      <change afterPath="$PROJECT_DIR$/.idea/libraries/weka.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/GeneticAlgorithm.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeneticAlgorithm.iml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/File/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/File/FileHandler.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Genetic/Individual.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Genetic/Individual.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -25,9 +31,6 @@
+     <setting file="file://$PROJECT_DIR$/src/Main.java" root0="FORCE_HIGHLIGHTING" />
+     <setting file="file://$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java" root0="FORCE_HIGHLIGHTING" />
+   </component>
+-  <component name="ProblemsViewState">
+-    <option name="selectedIndex" value="1" />
+-  </component>
+   <component name="ProjectId" id="2HsjnVUD0AjAToujC7VBw0Xv0l8" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+@@ -38,7 +41,7 @@
+     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Programas" />
++    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../Program Files/Weka-3-8-6/weka.jar" />
+     <property name="project.structure.last.edited" value="Libraries" />
+     <property name="project.structure.proportion" value="0.15" />
+     <property name="project.structure.side.proportion" value="0.2" />
+Index: .idea/libraries/weka.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/weka.xml b/.idea/libraries/weka.xml
+new file mode 100644
+--- /dev/null	(date 1669269125940)
++++ b/.idea/libraries/weka.xml	(date 1669269125940)
+@@ -0,0 +1,9 @@
++<component name="libraryTable">
++  <library name="weka">
++    <CLASSES>
++      <root url="jar://$PROJECT_DIR$/../../../../../Program Files/Weka-3-8-6/weka.jar!/" />
++    </CLASSES>
++    <JAVADOC />
++    <SOURCES />
++  </library>
++</component>
+\ No newline at end of file
