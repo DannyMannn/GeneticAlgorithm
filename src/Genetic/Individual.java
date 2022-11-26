@@ -16,16 +16,26 @@ public class Individual {
     private double momentumDouble;
 
     // VALID RANGES OF THE TOPOLOGY OF THE MULTILAYER PERCEPTRON NEURAL NETWORK
-    private double minNumNeurons;
-    private double maxNumNeurons;
-    private double minNumHiddenLayers;
-    private double maxNumHiddenLayers;
-    private double minNumEpochs;
-    private double maxNumEpochs;
+    private int minNumNeurons;
+    private int maxNumNeurons;
+    private int minNumHiddenLayers;
+    private int maxNumHiddenLayers;
+    private int minNumEpochs;
+    private int maxNumEpochs;
     private double minLearningRate;
     private double maxLearningRate;
     private double minMomentum;
     private double maxMomentum;
+
+    // Número de bits que se usarán para cada parámetro
+    // esto es útil para agregarle los bits mayores (0s) a los binaryStrings
+    // ya que Integer.toBinraryString() no retorna 0s en su parte izquierda (no leading zeros)
+    // Son strings que se proporcionarán al String.format()
+    private String neuronBits = "%4s";
+    private String hiddenLayerBits = "%2s";
+    private String epochBits = "%6s";
+    private String learningRateBits = "%2s";
+    private String momentumBits = "%3s";
 
     private double accuracy;
 
@@ -106,9 +116,10 @@ public class Individual {
         return this.numNeuronsString + this.numHiddenLayersString + this.numEpochsString + this.learningRateString + this.momentumString;
     }
 
-    public String doubleToBinaryString(double number){
+    public String doubleToBinaryString(double number, String numBits){
         int numberInt = (int) number;
-        return Integer.toBinaryString(numberInt);
+        return String.format(numBits, Integer.toBinaryString(numberInt)).replace(' ', '0');
+        //return Integer.toBinaryString(numberInt);
     }
 
     /***********END OF IMPORTANT SECTION**************/
@@ -143,57 +154,66 @@ public class Individual {
         this.maxMomentum = maxMomentum;
     }
 
+    // Los BinaryStrings siempré estáran en el rango de (0, maxNumParametro - minNumParametro)
+    // lo cual significa que a versiones numéricas decimales de los parámetros se le debe sumar
+    // su respectivo delta, es decir minNumParametro.
+    // Ej. de conversión: minNumNeurons = 8, maxNumNeurons = 18.
+    // numNeuronsString solo puede estar dentro del rango (0, 10)
+    // al hacer un setNeuronsString se le debe de sumar minNumNeurons a la versión decimal del hiperparámetro
+    // al hacer un setNumNeuronsInt se le debe de restar minNumNeurons al binario. Esto es por lo siguiente:
+    // SE ESPERA QUE LOS STRINGS DE INDIVIDUAL SIEMPRE SE PROPORCIONEN DENTRO DEL RANGO [0, maxNumParametro - minNumParametro]
+    // SE ESPERA QUE LOS DECIMALES DE INDIVIDUAL SIEMPRE SE PROPORCIONEN DE TAL MANERA QUE WEKA LOS PUEDA INTERPRETAR [minNumParametro, maxNumParametro)]
 
     public void setNumNeuronsString(String numNeurons) {
         this.numNeuronsString = numNeurons;
-        this.numNeuronsInt = Integer.parseInt(numNeurons, 2);
+        this.numNeuronsInt = Integer.parseInt(numNeurons, 2) + minNumNeurons;
     }
 
     public void setNumHiddenLayersString(String numHiddenLayers) {
         this.numHiddenLayersString = numHiddenLayers;
-        this.numHiddenLayersInt = Integer.parseInt(numHiddenLayers, 2);
+        this.numHiddenLayersInt = Integer.parseInt(numHiddenLayers, 2) + minNumHiddenLayers;
     }
 
     public void setNumEpochsString(String numEpochs) {
         this.numEpochsString = numEpochs;
-        this.numEpochsInt = Integer.parseInt(numEpochs, 2);
+        this.numEpochsInt = Integer.parseInt(numEpochs, 2) + minNumEpochs;
     }
 
     public void setLearningRateString(String learningRate) {
         this.learningRateString = learningRate;
-        this.learningRateDouble = Integer.parseInt(learningRate, 2);
+        this.learningRateDouble = Integer.parseInt(learningRate, 2) + minLearningRate;
     }
 
     public void setMomentumString(String momentum) {
         this.momentumString = momentum;
-        this.momentumDouble = Integer.parseInt(momentum, 2);
+        this.momentumDouble = Integer.parseInt(momentum, 2) + minMomentum;
     }
 
 
 
     public void setNumNeuronsInt(int numNeurons) {
         this.numNeuronsInt = numNeurons;
-        this.numNeuronsString = this.doubleToBinaryString(numNeurons);
+        this.numNeuronsString = this.doubleToBinaryString(numNeurons - minNumNeurons, neuronBits);
     }
 
     public void setNumHiddenLayersInt(int numHiddenLayers) {
         this.numHiddenLayersInt = numHiddenLayers;
-        this.numHiddenLayersString = this.doubleToBinaryString(numHiddenLayers);
+        this.numHiddenLayersString = this.doubleToBinaryString(numHiddenLayers - minNumHiddenLayers, hiddenLayerBits);
     }
 
     public void setNumEpochsInt(int numEpochs) {
         this.numEpochsInt = numEpochs;
-        this.numEpochsString = this.doubleToBinaryString(numEpochs);
+        this.numEpochsString = this.doubleToBinaryString(numEpochs - minNumEpochs, epochBits);
     }
 
     public void setLearningRateDouble(double learningRate) {
         this.learningRateDouble = learningRate;
-        this.learningRateString = this.doubleToBinaryString(learningRate);
+        this.learningRateString = this.doubleToBinaryString(learningRate - minLearningRate, learningRateBits);
     }
 
     public void setMomentumDouble(double momentum) {
         this.momentumDouble = momentum;
-        this.momentumString = this.doubleToBinaryString(momentum);
+        this.momentumString = this.doubleToBinaryString(momentum - minMomentum, momentumBits);
     }
 
 

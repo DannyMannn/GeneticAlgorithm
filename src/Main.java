@@ -21,5 +21,9 @@ public class Main {
         }
         System.out.println(genAlg.generation[0]);
         */
+        Individual ind = new Individual();
+        ind.setNumNeuronsInt(10);
+        System.out.println(ind.getNumNeuronsString());
+        System.out.println(ind.getNumNeuronsInt());
     }
 }
