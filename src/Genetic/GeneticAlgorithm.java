@@ -140,7 +140,7 @@ public class GeneticAlgorithm {
                 train.setClassIndex(train.numAttributes()-1);
                 eval = new Evaluation(train);
                 eval.evaluateModel(mlp,train);
-                System.out.println(eval.pctCorrect());
+                System.out.println("-"+generation[i].getNumNeuronsInt() + " "+ eval.pctCorrect());
                 generation[i].setAccuracy(eval.pctCorrect());
                 file2.close();
             }
@@ -151,19 +151,19 @@ public class GeneticAlgorithm {
     }
 
     public static void quicksortGeneration(Individual A[], int izq, int der) {
-        double aux, piv = A[izq].getAccuracy();
+        Individual aux,piv = A[izq];
         int i=izq,j=der;
         while(i < j){
-            while(A[i].getAccuracy() >= piv && i < j) i++;
-            while(A[j].getAccuracy() < piv) j--;
+            while(A[i].getAccuracy() >= piv.getAccuracy() && i < j) i++;
+            while(A[j].getAccuracy() < piv.getAccuracy()) j--;
             if (i < j) {
-                aux= A[i].getAccuracy();
-                A[i].setAccuracy(A[j].getAccuracy());
-                A[j].setAccuracy(aux);
+                aux = A[i];
+                A[i] = A[j];
+                A[j] = aux;
             }
         }
-        A[izq].setAccuracy(A[j].getAccuracy());
-        A[j].setAccuracy(piv);
+        A[izq] = A[j];
+        A[j] = piv;
         if(izq < j-1)
             quicksortGeneration(A,izq,j-1);
         if(j+1 < der)
