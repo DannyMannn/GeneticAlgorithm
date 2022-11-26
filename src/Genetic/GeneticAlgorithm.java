@@ -68,38 +68,38 @@ public class GeneticAlgorithm {
             temp = couples[i][0].getNumNeuronsString().substring(0,n/2);
 
             n = couples[i][1].getNumNeuronsString().length();
-            temp.concat(couples[i][1].getNumNeuronsString().substring((n/2)+1,n));
+            temp.concat(couples[i][1].getNumNeuronsString().substring((n/2),n));
             p.setNumNeuronsString(temp);
                 //HiddenLayers
             n= couples[i][0].getNumHiddenLayersString().length();
             temp = couples[i][0].getNumHiddenLayersString().substring(0,n/2);
 
-            n = couples[i][1].getNumNeuronsString().length();
-            temp.concat(couples[i][1].getNumHiddenLayersString().substring((n/2)+1,n));
+            n = couples[i][1].getNumHiddenLayersString().length();
+            temp.concat(couples[i][1].getNumHiddenLayersString().substring((n/2),n));
             p.setNumHiddenLayersString(temp);
                 //Epochs
             n= couples[i][0].getNumEpochsString().length();
             temp = couples[i][0].getNumEpochsString().substring(0,n/2);
 
             n = couples[i][1].getNumEpochsString().length();
-            temp.concat(couples[i][1].getNumEpochsString().substring((n/2)+1,n));
+            temp.concat(couples[i][1].getNumEpochsString().substring((n/2),n));
             p.setNumEpochsString(temp);
             //L.R.
             n = couples[i][0].getLearningRateString().length();
             temp = couples[i][0].getLearningRateString().substring(0,n/2);
 
             n = couples[i][1].getLearningRateString().length();
-            temp.concat(couples[i][1].getLearningRateString().substring((n/2)+1,n));
+            temp.concat(couples[i][1].getLearningRateString().substring((n/2),n));
             p.setLearningRateString(temp);
             //Momentum
             n = couples[i][0].getMomentumString().length();
             temp = couples[i][0].getMomentumString().substring(0,n/2);
 
             n = couples[i][1].getMomentumString().length();
-            temp.concat(couples[i][1].getMomentumString().substring((n/2)+1,n));
+            temp.concat(couples[i][1].getMomentumString().substring((n/2),n));
             p.setMomentumString(temp);
 
-            couples[i][2] = p;
+            couples[i][2] = p; //child allocated in [i][2]
         }
 
 
@@ -107,10 +107,10 @@ public class GeneticAlgorithm {
     public void selectPairs(List<Individual> parents){//select the couples, lol
         //[parent1][parent2][child]
         Individual [][]couples = new Individual[15][3]; //15 rows and  3 cols
-        int max = 15; int min = 0; int k;
+        int max = 30; int min = 0; int k; //30 bc there would be 30 instances on parents (best scenario)
         int random_int;
         //Creating the couples
-        for(int i=0; i<30;i++){//30 couples created
+        for(int i=0; i<15;i++){//15 couples created
             k=0;
             for(int j=0; j<2;j++){
                 random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
