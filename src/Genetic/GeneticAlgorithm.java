@@ -100,15 +100,39 @@ public class GeneticAlgorithm {
         for (int i = 0; i < this.n; i++) {
             buf.write("    " + Double.toString(generation[i].getNumNeuronsInt()) + "    |    " + Double.toString(generation[i].getNumHiddenLayersInt()) + "   |    " + Integer.toString(generation[i].getNumEpochsInt()) + "  |      " + Double.toString(generation[i].getLearningRateDouble()) + "      |     " + Double.toString(generation[i].getMomentumDouble()) + "   | " + Double.toString(generation[i].getAccuracy()) + "\n");
         }
+
+        double a=0.0,min=0.0,max=0.0;
+        double standardDeviation = 0.0;
+        double med=0.0,med2=0.0;
+        for (int i = 0; i < 30; i++) {
+            a+=generation[i].getAccuracy();
+
+        }
+        med=a/30;
+
+        double b=0.0;
+
+        for (int i = 0; i < 15; i++) {
+            b+=generation[i].getAccuracy();
+
+        }
+        med2=b/15;
+
+        for (int i = 0; i < 15; i++) {
+            standardDeviation  += Math.pow((generation[i].getAccuracy() - med2), 2);
+        }
+        double raiz = standardDeviation / 45;
+        double des = Math.sqrt(raiz);
+
         buf.write("\n");
         buf.write("\n");
         buf.write("\n");
         buf.write("\n");
         buf.write("Estadisticas de la generacion: \n");
-        buf.write("Max= \n");  //Poner el max
-        buf.write("Min= \n");  //Poner el min
-        buf.write("Avg= \n");   //Poner la media
-        buf.write("Dev Std= \n");  //Poner desviacion
+        buf.write("Max= "+ generation[0].getAccuracy()+"\n");
+        buf.write("Min= "+ generation[29].getAccuracy()+"\n");
+        buf.write("Avg= "+ med +"\n");
+        buf.write("Dev Std= " + des + "\n");
         buf.close();
         salida.close();
     }

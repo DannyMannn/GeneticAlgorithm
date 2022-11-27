@@ -44,14 +44,14 @@ public class Main {
         ind.setNumNeuronsInt(10);
         System.out.println(ind.getNumNeuronsString());
         System.out.println(ind.getNumNeuronsInt());*/
-        /*
+
         try {
             GeneticAlgorithm gen = new GeneticAlgorithm("population0.txt");
             gen.lectura();
             gen.creacionArchivo(1);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }*/
+        }
         }catch (Exception ex){
             System.out.println(ex);
         }
