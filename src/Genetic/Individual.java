@@ -140,6 +140,7 @@ public class Individual {
         this.maxLearningRate = 0.17;
         this.minMomentum = 0.08;
         this.maxMomentum = 0.18;
+        this.accuracy = 0.0;
     }
 
     public void setRanges(byte minNumNeurons, byte maxNumNeurons,
