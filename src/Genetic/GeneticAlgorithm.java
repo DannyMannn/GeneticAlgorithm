@@ -118,10 +118,10 @@ public class GeneticAlgorithm {
         }
         med2=b/15;
 
-        for (int i = 0; i < 15; i++) {
-            standardDeviation  += Math.pow((generation[i].getAccuracy() - med2), 2);
+        for (int i = 0; i < 30; i++) {
+            standardDeviation  += Math.pow((generation[i].getAccuracy() - med), 2);
         }
-        double raiz = standardDeviation / 45;
+        double raiz = standardDeviation / 30;
         double des = Math.sqrt(raiz);
 
         buf.write("\n");
@@ -161,66 +161,78 @@ public class GeneticAlgorithm {
     }
 
 
-    private void mate(Individual[][] couples,int i){
+    public void mate(Individual[][] couples,int i) {
         Individual p = new Individual(); //auxiliar individual for assign it to the matrix
         int n = 0; //getting the middle of the hiperparam
         String temp; //temporal string for "bit exchange"
 
         //getting just one child per couple
         //each hiperParam gets an one-point crossover
-//        for(int i=0;i< couples.length; i++){ //iterate trough the rows
-        temp="";
+        temp = "";
         //numNeurons
         n = couples[i][0].getNumNeuronsString().length();
+        boolean shortStrin;
         temp = couples[i][0].getNumNeuronsString().substring(0, (n / 2) + 1);
 
         n = couples[i][1].getNumNeuronsString().length();
-        if(n==1) {
+        if (n == 1) {
             temp.concat(Character.toString(couples[i][1].getNumNeuronsString().charAt(0)));
-        }else{
+        } else {
             temp.concat(couples[i][1].getNumNeuronsString().substring((n / 2) + 1, n));
         }
         p.setNumNeuronsString(temp);
 
         //HiddenLayers
-        n= couples[i][0].getNumHiddenLayersString().length();
-        if(n==1) {
+        n = couples[i][0].getNumHiddenLayersString().length();
+        if (n == 1) {
             temp = (Character.toString(couples[i][0].getNumHiddenLayersString().charAt(0)));
-        }else {
+        } else {
             temp = couples[i][0].getNumHiddenLayersString().substring(0, n / 2);
         }
         //Acá no hay problema si n/2 = 0, pues n al menos será 1
         n = couples[i][1].getNumHiddenLayersString().length();
-        temp.concat(couples[i][1].getNumHiddenLayersString().substring((n/2),n));
+        temp.concat(couples[i][1].getNumHiddenLayersString().substring((n / 2), n));
 
         p.setNumHiddenLayersString(temp);
 
         //Epochs
-        n= couples[i][0].getNumEpochsString().length();
-        if(n<=2) {
+        n = couples[i][0].getNumEpochsString().length();
+        if (n <= 2) {
             temp = (Character.toString(couples[i][0].getNumEpochsString().charAt(0)));
-        }else {
+        } else {
             temp = couples[i][0].getNumEpochsString().substring(0, (n / 2) - 1);
         }
 
         n = couples[i][1].getNumEpochsString().length();
-        if(n==1) {
+        if (n == 1) {
             temp.concat(Character.toString(couples[i][1].getNumEpochsString().charAt(0)));
-        }else {
+        } else {
             temp.concat(couples[i][1].getNumEpochsString().substring((n / 2) - 1, n));
         }
         p.setNumEpochsString(temp);
 
         //L.R.
         n = couples[i][0].getLearningRateString().length();
-        if(n==1) {
+        if (n == 1) {
             temp = (Character.toString(couples[i][0].getLearningRateString().charAt(0)));
-        }else {
+        } else {
             temp = couples[i][0].getLearningRateString().substring(0, n / 2);
+            //System.out.println(couples[i][0].getLearningRateString());
         }
-
+        //System.out.println("temp 1 lr: " + temp);
         n = couples[i][1].getLearningRateString().length();
-        temp.concat(couples[i][1].getLearningRateString().substring((n/2),n));
+        //System.out.println("lr 1:"+couples[i][1].getLearningRateString());
+        //System.out.println("Deberia tener 1: " + couples[i][0].getLearningRateString().substring(0, n / 2));
+        temp += (couples[i][1].getLearningRateString().substring((n / 2), n));
+        //System.out.println("temp 2 lr: "+temp);
+        //System.out.println("Deberia tener 2:"+couples[i][1].getLearningRateString().substring((n/2),n));
+        if(Double.valueOf(Integer.parseInt(temp,2))/100.0 + couples[i][0].getMinLearningRate() >= couples[i][0].getMaxLearningRate()) {
+            temp = "110";
+        }else {
+            if (Double.valueOf(Integer.parseInt(temp, 2)) / 100.0 + couples[i][0].getMinLearningRate() <= couples[i][0].getMinLearningRate()) {
+                temp = "0";
+            }
+        }
         p.setLearningRateString(temp);
 
         //Momentum
@@ -230,13 +242,21 @@ public class GeneticAlgorithm {
         }else {
             temp = couples[i][0].getMomentumString().substring(0, (n / 2));
         }
-
         n = couples[i][1].getMomentumString().length();
-        temp.concat(couples[i][1].getMomentumString().substring((n/2),n));
+        temp+=(couples[i][1].getMomentumString().substring((n/2),n));
+        //System.out.println(temp);
+        if(Double.valueOf(Integer.parseInt(temp,2))/100.0 + couples[i][0].getMinMomentum() >= couples[i][0].getMaxMomentum()) {
+            temp = "1010";
+        }else {
+            if (Double.valueOf(Integer.parseInt(temp, 2)) / 100.0 + couples[i][0].getMinMomentum() <= couples[i][0].getMinMomentum()) {
+                temp = "0";
+            }
+        }
         p.setMomentumString(temp);
 
 
         couples[i][2] = p; //child allocated in [i][2]
+        System.out.println("\tHijo\n\t"+couples[i][2]+" Creado correctamente? "+couples[i][2].validate()+"\n");
         this.n++;
 //            System.out.println(couples[i][2]+" i="+i);//DEBUG childs created correctly (with changes)
 //        }
@@ -394,6 +414,9 @@ public class GeneticAlgorithm {
             }
         }
         for(int i=0; i<couples.length;i++){//creating here the for loop, for an expected output :p
+            System.out.println("Pareja\n" +
+                    "\t"+couples[i][0] +
+                    "\n\t"+couples[i][1]);
             mate(couples,i);
         }
 
@@ -410,11 +433,11 @@ public class GeneticAlgorithm {
         }
         k--;
 
-        System.out.println("\nHijos creados: ");
+        /*System.out.println("\nHijos creados: ");
         for(int i=0; i<couples.length;i++){ //impresion antes
             System.out.println(couples[i][2]);
-        }
-        System.out.println(k);//DEBUG
+        }*/
+        //System.out.println(k);//DEBUG
 //        //asignando hijos a gen
         int j=0;
         for(int i=k; i<k+couples.length;i++){
@@ -430,8 +453,9 @@ public class GeneticAlgorithm {
             generation[i] = couples[j][2];
             j++;
         }
-        for(int i=0; i<k+couples.length;i++){//15 couples created
-            System.out.println(generation[i]);
+        System.out.println("\nHijos creados y mutados: ");
+        for(int i=k; i<k+couples.length;i++){//15 couples created
+            //System.out.println(generation[i]);
         }
     }
     public void evaluate(){

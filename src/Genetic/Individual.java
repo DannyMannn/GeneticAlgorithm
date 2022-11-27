@@ -187,12 +187,12 @@ public class Individual {
 
     public void setLearningRateString(String learningRate) {
         this.learningRateString = learningRate;
-        this.learningRateDouble = Integer.parseInt(learningRate, 2) + minLearningRate;
+        this.learningRateDouble =Double.valueOf( Integer.parseInt(learningRate, 2))/100 + minLearningRate;
     }
 
     public void setMomentumString(String momentum) {
         this.momentumString = momentum;
-        this.momentumDouble = Integer.parseInt(momentum, 2) + minMomentum;
+        this.momentumDouble = Double.valueOf(Integer.parseInt(momentum, 2))/100 + minMomentum;
     }
 
 
@@ -282,6 +282,22 @@ public class Individual {
             }
         }
         return numHiddenLayersMLP;
+    }
+
+    public double getMaxLearningRate(){
+        return maxLearningRate;
+    }
+
+    public double getMaxMomentum(){
+        return maxMomentum;
+    }
+
+    public double getMinLearningRate(){
+        return minLearningRate;
+    }
+
+    public double getMinMomentum(){
+        return minMomentum;
     }
 
     @Override
