@@ -17,7 +17,7 @@ public class GeneticAlgorithm {
     public int n;
     public FileInputStream entrada;
 
-    public FileOutputStream salida;
+    //public FileOutputStream salida;
 
     public int numGeneracion;
 
@@ -70,8 +70,25 @@ public class GeneticAlgorithm {
         */
     }
 
-    public void creacionArchivo(int generacion) {
-
+    public void creacionArchivo(int generacion) throws IOException {
+        String nombreFile = "population" + String.valueOf(generacion) + ".txt";
+        FileOutputStream salida = new FileOutputStream(nombreFile);
+        BufferedWriter buf = new BufferedWriter(new OutputStreamWriter(salida));
+        buf.write("Neuronas  |  Capas  |  Epocas | Learning Rate | Momentum | Accuracy\n");
+        for (int i = 0; i < 15; i++) {
+            buf.write("    " + Double.toString(generation[i].getNumNeuronsInt()) + "    |    " + Double.toString(generation[i].getNumHiddenLayersInt()) + "   |    " + Integer.toString(generation[i].getNumEpochsInt()) + "  |      " + Double.toString(generation[i].getLearningRateDouble()) + "      |     " + Double.toString(generation[i].getMomentumDouble()) + "   | " + Double.toString(generation[i].getAccuracy()) + "\n");
+        }
+        buf.write("\n");
+        buf.write("\n");
+        buf.write("\n");
+        buf.write("\n");
+        buf.write("Estadisticas de la generacion: \n");
+        buf.write("Max= \n");  //Poner el max
+        buf.write("Min= \n");  //Poner el min
+        buf.write("Avg= \n");   //Poner la media
+        buf.write("Dev Std= \n");  //Poner desviacion
+        buf.close();
+        salida.close();
     }
 
     public void lectura() throws IOException {

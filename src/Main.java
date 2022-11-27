@@ -29,6 +29,7 @@ public class Main {
         try {
             GeneticAlgorithm gen = new GeneticAlgorithm("population0.txt");
             gen.lectura();
+            gen.creacionArchivo(1);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d0f0c886-c360-46ce-b2c2-0858f9328930" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/weka.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/weka.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/weka1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_23_11_2022_13_19__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_23_11_2022_13_19__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_23_11_2022_23_52__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_23_11_2022_23_52__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_11_2022_0_03__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_11_2022_0_03__Changes_.xml" afterDir="false" />
+    <list default="true" id="d0f0c886-c360-46ce-b2c2-0858f9328930" name="Changes" comment="agregando la lectura inicial">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeneticAlgorithm.iml" beforeDir="false" afterPath="$PROJECT_DIR$/GeneticAlgorithm.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/population0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/population0.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Genetic/GeneticAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +95,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669511727880</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="agregando la lectura inicial">
+      <created>1669512858438</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1669512858438</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,6 +122,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="xd" />
-    <option name="LAST_COMMIT_MESSAGE" value="xd" />
+    <MESSAGE value="agregando la lectura inicial" />
+    <option name="LAST_COMMIT_MESSAGE" value="agregando la lectura inicial" />
   </component>
 </project>
