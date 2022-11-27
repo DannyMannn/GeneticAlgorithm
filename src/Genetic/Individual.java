@@ -34,36 +34,36 @@ public class Individual {
     private String neuronBits = "%4s";
     private String hiddenLayerBits = "%2s";
     private String epochBits = "%6s";
-    private String learningRateBits = "%2s";
-    private String momentumBits = "%3s";
+    private String learningRateBits = "%3s";
+    private String momentumBits = "%4s";
 
     private double accuracy;
 
     public Individual(){
+        this.setDefaultRanges();
         this.numNeuronsString = new String();
         this.numHiddenLayersString = new String();
         this.numEpochsString = new String();
         this.learningRateString = new String();
         this.momentumString = new String();
 
-        this.setDefaultRanges();
     }
 
     public Individual(String numNeurons, String numHiddenLayers, String numEpochs, String learningRate, String momentum){
-        this.setTopologyBinaryString(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);
         this.setDefaultRanges();
+        this.setTopologyBinaryString(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);
     }
 
 
 
     public Individual(int numNeurons, int numHiddenLayers, int numEpochs, double learningRate, double momentum){
-        this.setTopologyMLP(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);
         this.setDefaultRanges();
+        this.setTopologyMLP(numNeurons, numHiddenLayers, numEpochs, learningRate, momentum);
     }
 
     public Individual(double accuracy){
-        this.accuracy = accuracy;
         this.setDefaultRanges();
+        this.accuracy = accuracy;
     }
 
     //Set de values as mlp request
@@ -213,12 +213,12 @@ public class Individual {
 
     public void setLearningRateDouble(double learningRate) {
         this.learningRateDouble = learningRate;
-        this.learningRateString = this.doubleToBinaryString(learningRate - minLearningRate, learningRateBits);
+        this.learningRateString = this.doubleToBinaryString(((learningRate * 100) - (minLearningRate * 100)), learningRateBits);
     }
 
     public void setMomentumDouble(double momentum) {
         this.momentumDouble = momentum;
-        this.momentumString = this.doubleToBinaryString(momentum - minMomentum, momentumBits);
+        this.momentumString = this.doubleToBinaryString(((momentum * 100) - (minMomentum * 100)), momentumBits);
     }
 
 
