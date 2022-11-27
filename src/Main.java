@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
 
         //Se pusieron los atributos de GeneticAlgoritm en public para hacer las pruebas
-        GeneticAlgorithm genAlg = new GeneticAlgorithm();
+        /*GeneticAlgorithm genAlg = new GeneticAlgorithm();
         genAlg.n = 5;
         genAlg.generation[0] = new Individual(16,1,120,0.11,0.02 );
         genAlg.generation[1] = new Individual(18,3,100,0.2,0.2);
@@ -15,7 +15,7 @@ public class Main {
         genAlg.generation[4] = new Individual(8,2,90,0.11,0.02);
         System.out.println();
         //genAlg.evaluate();
-        genAlg.selectPairs();
+        genAlg.selectPairs();*/
         /*System.out.println("Ordenamiento de accuracy");
         for (int i = 0; i < genAlg.n; i++) {
             System.out.println(genAlg.generation[i].getAccuracy());
@@ -26,11 +26,12 @@ public class Main {
         ind.setNumNeuronsInt(10);
         System.out.println(ind.getNumNeuronsString());
         System.out.println(ind.getNumNeuronsInt());*/
-        /*try {
+        try {
             GeneticAlgorithm gen = new GeneticAlgorithm("population0.txt");
             gen.lectura();
+            gen.creacionArchivo(1);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }*/
+        }
     }
 }
