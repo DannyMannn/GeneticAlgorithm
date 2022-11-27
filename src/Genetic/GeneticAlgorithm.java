@@ -254,8 +254,8 @@ public class GeneticAlgorithm {
 
     public void selectPairs(){//select the couples, lol
         //[parent1][parent2][child]
-        Individual[][] couples = new Individual[5][3]; //15 rows and  3 cols
-        int max = 4; int min = 0; int k=0; //15 bc there would be 15 parents (best scenario)
+        Individual[][] couples = new Individual[15][3]; //15 rows and  3 cols
+        int max = 14; int min = 0; int k=0; //15 bc there would be 15 parents (best scenario)
         int random_int;
         //Creating the couples
         System.out.println(couples.length);
