@@ -187,12 +187,12 @@ public class Individual {
 
     public void setLearningRateString(String learningRate) {
         this.learningRateString = learningRate;
-        this.learningRateDouble =Double.valueOf( Integer.parseInt(learningRate, 2))/100 + minLearningRate;
+        this.learningRateDouble = (Double.valueOf( Integer.parseInt(learningRate, 2)) + (minLearningRate * 100d)) / 100d;
     }
 
     public void setMomentumString(String momentum) {
         this.momentumString = momentum;
-        this.momentumDouble = Double.valueOf(Integer.parseInt(momentum, 2))/100 + minMomentum;
+        this.momentumDouble = (Double.valueOf(Integer.parseInt(momentum, 2)) + (minMomentum * 100d)) / 100d;
     }
 
 
