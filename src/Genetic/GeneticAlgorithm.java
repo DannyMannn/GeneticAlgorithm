@@ -8,7 +8,7 @@ import jdk.swing.interop.SwingInterOpUtils;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Instances;
 import weka.classifiers.evaluation.Evaluation;
-
+import java.util.Scanner;
 import javax.swing.text.html.parser.Parser;
 import java.io.*;
 
@@ -77,7 +77,9 @@ public class GeneticAlgorithm {
                 System.out.println("Leyendo primer archivo");
                 lectura();
             }
-            for (int i = 0; i < it; i++) {
+            Scanner input = new Scanner(System.in);
+            boolean answ=false;
+            do{
                 selectPairs();
                 evaluate();
                 controlPopulation();
@@ -85,7 +87,9 @@ public class GeneticAlgorithm {
                 quicksortGeneration(generation,0,this.n-1);
                 numGeneracion++;
                 creacionArchivo(numGeneracion);
-            }
+                System.out.println("Continuar? Si [Ingresa 'True'] \nNo [Ingresa 'False']");
+                answ = input.nextBoolean();
+            }while(answ);
         }catch(Exception ex){
             ex.printStackTrace();
             //System.out.println(ex);
