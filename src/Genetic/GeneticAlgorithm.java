@@ -19,6 +19,8 @@ public class GeneticAlgorithm {
 
     public FileOutputStream salida;
 
+    public int numGeneracion;
+
     public MultilayerPerceptron mlp;
 
     public GeneticAlgorithm(String file) throws FileNotFoundException {
@@ -27,6 +29,7 @@ public class GeneticAlgorithm {
         this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
         this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)
         this.mlp = new MultilayerPerceptron();
+        this.numGeneracion = 1;
         for(int i=0;i<generation.length;i++){
             generation[i] = new Individual(0,0,0,0.0,0.0);
         }
@@ -66,41 +69,30 @@ public class GeneticAlgorithm {
         - Termina ciclo
         */
     }
+
+    public void creacionArchivo(int generacion) {
+
+    }
+
     public void lectura() throws IOException {
         BufferedReader buf = new BufferedReader(new InputStreamReader(entrada));
-        String linea, encabezado;
-        int tam;
-        encabezado = buf.readLine();
-        buf.readLine();  //Saltarse los titulos de cada parametro
-        System.out.println("El encabezadoadada " + encabezado + " tamano " + encabezado.length());
-        if (encabezado.length() % 2 == 0) {
-            tam = Integer.parseInt(String.valueOf(encabezado.charAt(encabezado.length()-1)));
-            System.out.println("Tamano para 1 digito: " + tam);
+        String linea;
+        String aa = buf.readLine();
+        //System.out.println("Encabezado " + aa);
+        for (int i = 0; i < n; i++) {
+            linea = buf.readLine();
+            String linea1 = linea.replaceAll("\\|", " ");    //El doble \\ es para que no tome en cuenta | como un meta character (Java ocupa eso para regex)
+            String lineaCorrect = linea1.trim().replaceAll(" +", " ");  //El " +" es para cuando hay mas de un espacio convertirlo a uno solo y el trim elimina espacios
+            System.out.println("Linea sin split: " + lineaCorrect);
+            String[] temp = lineaCorrect.split(" ");
+            //System.out.println("Numero neuronas: " + temp[0]);
+            //System.out.println("Los temps son : " + temp[0] + " " + temp[5]);
+            generation[i] = new Individual(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), Double.parseDouble(temp[3]), Double.parseDouble(temp[4]));
+            generation[i].setAccuracy(Double.parseDouble(temp[5]));
         }
-        else {
-            tam = Integer.parseInt(encabezado.substring(encabezado.length() - 2));
-            System.out.println("Tamano para 2 digitos: " + tam);
+        for (int i = 0; i < n; i++) {
+            System.out.println("El accuracy del indice " + i + " es " + generation[i].getAccuracy());
         }
-        if (tam == 0) {
-            for (int i=0; i<15; i++) {
-                linea = buf.readLine();
-                String linea1 = linea.replaceAll("\\|", " ");    //El doble \\ es para que no tome en cuenta | como un meta character (Java ocupa eso para regex)
-                String lineaCorrect = linea1.trim().replaceAll(" +", " ");  //El " +" es para cuando hay mas de un espacio convertirlo a uno solo y el trim elimina espacios
-                System.out.println("Linea sin split: " + lineaCorrect);
-                String[] temp = lineaCorrect.split(" ");
-                int size = temp.length;
-                for (i = 0; i < size; i++) {
-                    System.out.println("indice " + i + ": " + temp[i] + " ");
-                }
-            }
-        }
-        /*String linea1 = linea.replaceAll("\\|", " ");    //El doble \\ es para que no tome en cuenta | como un meta character (Java ocupa eso para regex)
-        String lineaCorrect = linea1.trim().replaceAll(" +", " ");  //El " +" es para cuando hay mas de un espacio convertirlo a uno solo y el trim elimina espacios
-        System.out.println("Linea sin split: " + lineaCorrect);
-        String[] temp = lineaCorrect.split(" ");
-        int size = temp.length;
-        for (int i = 0; i < size; i++) {System.out.println("indice " + i + ": " + temp[i] + " ");
-        }*/
         entrada.close();
     }
 
