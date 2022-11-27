@@ -100,14 +100,6 @@ public class Individual {
         if (!(numEpochsInt >= minNumEpochs && numEpochsInt <= maxNumEpochs))
             return false;
 
-//        if (Double.compare(learningRateDouble, 0.11d) != 0 || Double.compare(learningRateDouble, 0.13d) != 0
-//                || Double.compare(learningRateDouble, 0.15d) != 0 || Double.compare(learningRateDouble, 0.17d) != 0)
-//            return false;
-//
-//        if(Double.compare(momentumDouble, 0.08d) != 0 || Double.compare(momentumDouble, 0.10d) != 0
-//                || Double.compare(momentumDouble, 0.12d) != 0 || Double.compare(momentumDouble, 0.14d) != 0
-//                || Double.compare(momentumDouble, 0.16d) != 0|| Double.compare(momentumDouble, 0.18d) != 0)
-//            return false;
         if(!(learningRateDouble >= minLearningRate && learningRateDouble <= maxLearningRate))
             return false;
 
@@ -124,7 +116,6 @@ public class Individual {
     public String doubleToBinaryString(double number, String numBits){
         int numberInt = (int) number;
         return String.format(numBits, Integer.toBinaryString(numberInt)).replace(' ', '0');
-        //return Integer.toBinaryString(numberInt);
     }
 
     /***********END OF IMPORTANT SECTION**************/

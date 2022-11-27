@@ -1,34 +1,23 @@
 package Genetic;
 
 import File.FileHandler;
-import Genetic.Individual;
-import java.util.List;
-
-import jdk.swing.interop.SwingInterOpUtils;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Instances;
 import weka.classifiers.evaluation.Evaluation;
 import java.util.Scanner;
-import javax.swing.text.html.parser.Parser;
 import java.io.*;
 
 public class GeneticAlgorithm {
 
-    private FileHandler f;
-    public Individual[] generation;
-    public int n;
-    public FileInputStream entrada;
-
-    //public FileOutputStream salida;
-
-    public int numGeneracion;
-
-    public MultilayerPerceptron mlp;
+    private Individual[] generation;
+    private int n;
+    private FileInputStream entrada;
+    private int numGeneracion;
+    private MultilayerPerceptron mlp;
 
     public GeneticAlgorithm(String file) throws FileNotFoundException {
         this.entrada = new FileInputStream(file);
-        this.f = new FileHandler(file);         //Nombre del primer archivo
-        this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
+        this.generation = new Individual[45];   //30 por generación + 15 hijos
         this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)
         this.mlp = new MultilayerPerceptron();
         this.numGeneracion = 1;
@@ -39,7 +28,7 @@ public class GeneticAlgorithm {
 
     public GeneticAlgorithm() throws FileNotFoundException{
         this.entrada = new FileInputStream("population0.txt");
-        this.generation = new Individual[45];   //30 por generación + 15 hijos (Podría cambiarse por dos variables -generation e hijos-)
+        this.generation = new Individual[45];   //30 por generación + 15 hijos
         this.n = 15;                            //Numero de hiperparametros (Inicialmente 15)
         this.mlp = new MultilayerPerceptron();
         this.numGeneracion = 1;
@@ -48,37 +37,16 @@ public class GeneticAlgorithm {
         }
     }
 
-    public void generarPoblacion(int it){
-        /*
-        Dentro de un ciclo
-            - Ciclo para almacenar los valores del archivo en el arreglo generation
-                n cambiará a lo largo de la ejecucion (Para manejar cuantos hiperparametros hay)
-                for(int i=0;i<n;i++){
-                        //Llamada a FileHandler para obtener renglon por renglon del archivo inicial
-                        //Almacenamiento de atributos de hiperparametros en la variable generation (En clase Individual)
-                    }
-            - Llamada a selectPair() (Primero llama a la función para seleccionar parejas a nuestros primeros 15 hiperparámetros)
-                - selectPair() almacena la linea en un array o la estructura de datos que se quiera (Tal vez arreglo de Individual)
-                - Selecciona los 15 mejores
-                - mate() Empareja al azar los 15 mejores y genera 1 hijo por pareja. Almacena a los hijos en una estructura de datos diferente al de los padres (Para distingirlos, es una idea)
-                    - llamada a validate() de Individual para verificar si está dentro del rango, en caso contrario, repetir
-                - mutate()
-                    - llamada a validate()
-                - Una vez terminado, lo agrega a un archivo (Usando la clase FileHandler)
-            - llamada a evaluate()
-            - Llamada a sortGeneration() (A partir del arreglo generation, ordenar de mejor a peor)
-            - Llamada a controlPopulation() Elimina los peores resultados auxiliandose de la variable n,
-                        es decir, mientras n>30, eliminar los peores resultados (Para que no se eliminen hiperparametros de la primera generacion)
-            - Llamada a FileHandler para que agregue los datos de generation a un nuevo archivo con la sitaxis numNeuronas,numHiddenLayers, numEpochs,learningRate,momentum,accuracy
-        - Termina ciclo
-        */
+    public void generarPoblacion(){
         try {
+            //Lee la primera población
             if (numGeneracion == 1) {
                 System.out.println("Leyendo primer archivo");
                 lectura();
             }
             Scanner input = new Scanner(System.in);
             boolean answ=false;
+            //Proceso general de las generaciones
             do{
                 selectPairs();
                 evaluate();
@@ -87,15 +55,19 @@ public class GeneticAlgorithm {
                 quicksortGeneration(generation,0,this.n-1);
                 numGeneracion++;
                 creacionArchivo(numGeneracion);
-                System.out.println("Continuar? Si [Ingresa 'True'] \nNo [Ingresa 'False']");
+                System.out.println("Continuar? \nSi [Ingresa 'True'] \nNo [Ingresa 'False']");
                 answ = input.nextBoolean();
             }while(answ);
         }catch(Exception ex){
             ex.printStackTrace();
-            //System.out.println(ex);
         }
     }
 
+    /**
+     *  Crea los archivos para almacenar las generaciones
+     *  Solo almacena los 30 mejores individuos
+     *  Guarda valores estadísticos de la población
+     */
     public void creacionArchivo(int generacion) throws IOException {
         String nombreFile = "population" + String.valueOf(generacion) + ".txt";
         FileOutputStream salida = new FileOutputStream(nombreFile);
@@ -105,22 +77,13 @@ public class GeneticAlgorithm {
             buf.write("    " + Double.toString(generation[i].getNumNeuronsInt()) + "    |    " + Double.toString(generation[i].getNumHiddenLayersInt()) + "   |    " + Integer.toString(generation[i].getNumEpochsInt()) + "  |      " + Double.toString(generation[i].getLearningRateDouble()) + "      |     " + Double.toString(generation[i].getMomentumDouble()) + "   | " + Double.toString(generation[i].getAccuracy()) + "\n");
         }
 
-        double a=0.0,min=0.0,max=0.0;
+        double a=0.0;
         double standardDeviation = 0.0;
-        double med=0.0,med2=0.0;
+        double med=0.0;
         for (int i = 0; i < 30; i++) {
             a+=generation[i].getAccuracy();
-
         }
         med=a/30;
-
-        double b=0.0;
-
-        for (int i = 0; i < 15; i++) {
-            b+=generation[i].getAccuracy();
-
-        }
-        med2=b/15;
 
         for (int i = 0; i < 30; i++) {
             standardDeviation  += Math.pow((generation[i].getAccuracy() - med), 2);
@@ -141,30 +104,32 @@ public class GeneticAlgorithm {
         salida.close();
     }
 
+
+    /**
+     * Lee el archivo de la generación 0 (La generación inicial)
+     * Almacena los hiperparámetros en el arreglo "generation"
+     * generation[] es un arreglo de tipo "Individual"
+     */
     public void lectura() throws IOException {
         BufferedReader buf = new BufferedReader(new InputStreamReader(entrada));
         String linea;
         String aa = buf.readLine();
-        //System.out.println("Encabezado " + aa);
         for (int i = 0; i < n; i++) {
             linea = buf.readLine();
             String linea1 = linea.replaceAll("\\|", " ");    //El doble \\ es para que no tome en cuenta | como un meta character (Java ocupa eso para regex)
             String lineaCorrect = linea1.trim().replaceAll(" +", " ");  //El " +" es para cuando hay mas de un espacio convertirlo a uno solo y el trim elimina espacios
-            //System.out.println("Linea sin split: " + lineaCorrect);
             String[] temp = lineaCorrect.split(" ");
-            //System.out.println("Numero neuronas: " + temp[0]);
-            //System.out.println("Los temps son : " + Integer.parseInt(temp[0]) + " " + Integer.parseInt(temp[1])+ " " + Integer.parseInt(temp[2])+ " " + Double.parseDouble(temp[3])/100.0+ " " + Double.parseDouble(temp[4])/100.0);
             generation[i] = new Individual(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), Double.parseDouble(temp[3])/100.0, Double.parseDouble(temp[4])/100.0);
-            //generation[i].setAccuracy(Double.parseDouble(temp[5]));
         }
-        /*
-        for (int i = 0; i < n; i++) {
-            System.out.println("El accuracy del indice " + i + " es " + generation[i].getAccuracy());
-        }*/
         entrada.close();
     }
 
-
+    /**
+     *  Crea nuevos "Individual" a partir de dos padres
+     *  Toma los atributos de los padres y realiza una combinación entre ellos para
+     *      generar nuevos atributos
+     *  Verifica si los nuevos atributos se encuentran dentro del rango definido
+     * */
     public void mate(Individual[][] couples,int i) {
         Individual p = new Individual(); //auxiliar individual for assign it to the matrix
         int n = 0; //getting the middle of the hiperparam
@@ -193,7 +158,6 @@ public class GeneticAlgorithm {
         } else {
             temp = couples[i][0].getNumHiddenLayersString().substring(0, n / 2);
         }
-        //Acá no hay problema si n/2 = 0, pues n al menos será 1
         n = couples[i][1].getNumHiddenLayersString().length();
         temp.concat(couples[i][1].getNumHiddenLayersString().substring((n / 2), n));
 
@@ -221,15 +185,9 @@ public class GeneticAlgorithm {
             temp = (Character.toString(couples[i][0].getLearningRateString().charAt(0)));
         } else {
             temp = couples[i][0].getLearningRateString().substring(0, n / 2);
-            //System.out.println(couples[i][0].getLearningRateString());
         }
-        //System.out.println("temp 1 lr: " + temp);
         n = couples[i][1].getLearningRateString().length();
-        //System.out.println("lr 1:"+couples[i][1].getLearningRateString());
-        //System.out.println("Deberia tener 1: " + couples[i][0].getLearningRateString().substring(0, n / 2));
         temp += (couples[i][1].getLearningRateString().substring((n / 2), n));
-        //System.out.println("temp 2 lr: "+temp);
-        //System.out.println("Deberia tener 2:"+couples[i][1].getLearningRateString().substring((n/2),n));
         if(Double.valueOf(Integer.parseInt(temp,2))/100.0 + couples[i][0].getMinLearningRate() >= couples[i][0].getMaxLearningRate()) {
             temp = "110";
         }else {
@@ -248,7 +206,6 @@ public class GeneticAlgorithm {
         }
         n = couples[i][1].getMomentumString().length();
         temp+=(couples[i][1].getMomentumString().substring((n/2),n));
-        //System.out.println(temp);
         if(Double.valueOf(Integer.parseInt(temp,2))/100.0 + couples[i][0].getMinMomentum() >= couples[i][0].getMaxMomentum()) {
             temp = "1010";
         }else {
@@ -259,24 +216,28 @@ public class GeneticAlgorithm {
         p.setMomentumString(temp);
 
 
-        couples[i][2] = p; //child allocated in [i][2]
+        couples[i][2] = p; //Almacena al hijo
         System.out.println("\tHijo\n\t"+couples[i][2]+" Creado correctamente? "+couples[i][2].validate()+"\n");
         this.n++;
-//            System.out.println(couples[i][2]+" i="+i);//DEBUG childs created correctly (with changes)
-//        }
     }
+
+    /**
+     *  Realiza mutaciones a 2 hijos creados anteriormente
+     *  La selección de hijos se realiza de forma aleatoria
+     *  Debido a que las mutaciones son aleatorias, el método comprueba
+     *      que los atributos estén dentro del rango permitido
+     * */
     private void mutate(Individual[][] couples){
         Individual p = new Individual();
         int n = 0;
         String temp,aux,newString;
         int random_int,random_int2,descriptor;
         int max = 14; int min = 0,rep=-1;
-        int k;
         temp="";
         aux="";
+        newString="";
 
         //modificar un bit de 2 hijos aleatorios
-
         for(int i=0;i<2; i++) {
             do {    //Controla si ya se aplicó mutación a ese hijo
                 random_int = (int) Math.floor(Math.random() * (max - min + 1) + min);//para la fila a mutar
@@ -285,7 +246,6 @@ public class GeneticAlgorithm {
             switch (descriptor) {
                 case 1://numNeurons
                     n = couples[random_int][2].getNumNeuronsString().length();
-                    //System.out.println("Hijo de pareja "+random_int+" Numero de neuronas: "+couples[random_int][2].getNumNeuronsString()+"\tn: "+n);
                     temp = couples[random_int][2].getNumNeuronsString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
@@ -295,13 +255,9 @@ public class GeneticAlgorithm {
                     }
                     aux = couples[random_int][2].getNumNeuronsString();
                     couples[random_int][2].setNumNeuronsString(newString);
-                    //p.setNumNeuronsString(temp);
-                    //couples[i][2] = p;
-                    //System.out.println("Hecho numNeurons");
                     break;
                 case 2://HiddenLayers
                     n = couples[random_int][2].getNumHiddenLayersString().length();
-                    //System.out.println("Hijo de pareja "+random_int+" Capas ocultas: "+couples[random_int][2].getNumHiddenLayersString()+"\tn: "+n);
                     temp = couples[random_int][2].getNumHiddenLayersString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
@@ -309,15 +265,11 @@ public class GeneticAlgorithm {
                     } else {
                         newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    //p.setNumHiddenLayersString(temp);
                     aux = couples[random_int][2].getNumHiddenLayersString();
                     couples[random_int][2].setNumHiddenLayersString(newString);
-                    //couples[i][2] = p;
-                    //System.out.println("Hecho capas ocultas");
                     break;
                 case 3://Epochs
                     n = couples[random_int][2].getNumEpochsString().length();
-                    //System.out.println("Hijo de pareja "+random_int+" Numero de epocas: "+couples[random_int][2].getNumEpochsString()+"\tn: "+n);
                     temp = couples[random_int][2].getNumEpochsString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
@@ -325,15 +277,11 @@ public class GeneticAlgorithm {
                     } else {
                         newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    //p.setNumEpochsString(temp);
                     aux = couples[random_int][2].getNumEpochsString();
                     couples[random_int][2].setNumEpochsString(newString);
-                    //couples[i][2] = p;
-                    //System.out.println("Hecho numero de epocas");
                     break;
                 case 4://L.R.
                     n = couples[random_int][2].getLearningRateString().length();
-                    //System.out.println("Hijo de pareja "+random_int+" Learning rate: "+couples[random_int][2].getLearningRateString()+"\tn: "+n);
                     temp = couples[random_int][2].getLearningRateString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
@@ -341,15 +289,11 @@ public class GeneticAlgorithm {
                     } else {
                         newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    // p.setLearningRateString(temp);
                     aux = couples[random_int][2].getLearningRateString();
                     couples[random_int][2].setLearningRateString(newString);
-                    //couples[i][2] = p;
-                    //System.out.println("Hecho learning rate");
                     break;
                 case 5://Momentum
                     n = couples[random_int][2].getMomentumString().length();
-                    //System.out.println("Hijo de pareja "+random_int+" Momentum: "+couples[random_int][2].getMomentumString()+"\tn: "+n);
                     temp = couples[random_int][2].getMomentumString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
@@ -357,19 +301,16 @@ public class GeneticAlgorithm {
                     } else {
                         newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    //p.setMomentumString(temp);
                     aux = couples[random_int][2].getMomentumString();
                     couples[random_int][2].setMomentumString(newString);
-                    //couples[i][2] = p;
-                    //System.out.println("Hecho momentum");
                     break;
                 default:
                     System.out.println("ERROR");
                     break;
 
             }
+            //Reasigna el atributo original si la mutación no ocurrió correctamente
             if(!couples[random_int][2].validate()){
-                //System.out.println("Hijo "+random_int+" no salio mutacion");
                 switch(descriptor){
                     case 1:
                         couples[random_int][2].setNumNeuronsString(aux);
@@ -389,7 +330,6 @@ public class GeneticAlgorithm {
                 }
                 i--;
             }else{
-                //System.out.println("Hijo "+random_int+" mutado");
                 rep = random_int;
             }
             temp="";
@@ -398,7 +338,17 @@ public class GeneticAlgorithm {
         }
     }
 
-    public void selectPairs(){//select the couples, lol
+    /**
+     *  Selecciona 15 parejas de individuos al azar para posteriormente
+     *      generar hijos mediante el método "mate(couples,i)"
+     *  Solo los mejores 15 individuos pueden tener pareja
+     *  Un individuo no puede formar pareja consigo mismo
+     *  Una vez generados los hijos, se llama al método "mutate(couples)"
+     *  Agrega los hijos al arreglo "generation" de la clase
+     *  Por último llama al método "quicksortGeneration(generation,0,k+couples.length)"
+     *      la cual ordena el arreglo
+     * */
+    public void selectPairs(){//select the couples
         //[parent1][parent2][child]
         Individual[][] couples = new Individual[15][3]; //15 rows and  3 cols
         for(int i =0;i<15;i++){
@@ -406,15 +356,17 @@ public class GeneticAlgorithm {
                 couples[i][j] = new Individual();
             }
         }
-        int max = 14; int min = 0; int k=0; //15 bc there would be 15 parents (best scenario)
+        int max = 14; int min = 0; int k=0; //15 parejas
         int random_int;
-        //Creating the couples
+        //Asigna parejas
         System.out.println(couples.length);
         for(int i=0; i<couples.length;i++){//15 couples created
             for(int j=0; j<2;j++){
                 random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
-//                System.out.println("ran "+random_int);//DEBUG
-                couples[i][j] = generation[random_int];
+                if(j==1 && generation[random_int]==couples[i][0])   //Comprueba si no se trata del mismo individuo
+                    j--;
+                else
+                    couples[i][j] = generation[random_int];
             }
         }
         for(int i=0; i<couples.length;i++){//creating here the for loop, for an expected output :p
@@ -424,7 +376,7 @@ public class GeneticAlgorithm {
             mate(couples,i);
         }
 
-        //Obtiene la ubicación
+        //Obtiene la ubicación donde están almacenados los hijos
         Individual p;//aux
         k=0;
         while(k<generation.length){
@@ -432,36 +384,22 @@ public class GeneticAlgorithm {
             if(p.getLearningRateDouble() == 0.0 && p.getMomentumDouble() == 0.0){
                 break;
             }
-//            System.out.println(p + "k= "+k);//DEBUG
             k++;
         }
         k--;
 
-        /*System.out.println("\nHijos creados: ");
-        for(int i=0; i<couples.length;i++){ //impresion antes
-            System.out.println(couples[i][2]);
-        }*/
-        //System.out.println(k);//DEBUG
-//        //asignando hijos a gen
+        //Asigna los hijos al arreglo principal
         int j=0;
         for(int i=k; i<k+couples.length;i++){
             generation[i] = couples[j][2];
             j++;
         }
-        quicksortGeneration(generation,0,k+couples.length);
 
+        //Crea mutaciones a 2 hijos
         mutate(couples);
-//        //mutados
-        j=0;
-        for(int i=k; i<k+couples.length;i++){
-            generation[i] = couples[j][2];
-            j++;
-        }
-        System.out.println("\nHijos creados y mutados: ");
-        for(int i=k; i<k+couples.length;i++){//15 couples created
-            //System.out.println(generation[i]);
-        }
     }
+
+
     public void evaluate(){
         System.out.println("Evaluando poblacion");
         try {
@@ -491,10 +429,13 @@ public class GeneticAlgorithm {
             }
         }catch(Exception ex){
             ex.printStackTrace();
-            //System.out.println(ex);
         }
     }
 
+    /**
+     *  Ordena los individuos de acuerdo con su accuracy utilizando
+     *      el ordenamiento quicksort
+     * */
     public static void quicksortGeneration(Individual[] A, int izq, int der) {
         Individual aux,piv = A[izq];
         int i=izq,j=der;
@@ -515,6 +456,9 @@ public class GeneticAlgorithm {
             quicksortGeneration(A,j+1,der);
     }
 
+    /**
+     *  Elimina los 15 peores individuos asignando un objeto vacío
+     **/
     public void controlPopulation(){
         System.out.println("Controlando poblacion");
         for(int i=this.n-1;i>=30;i--){
