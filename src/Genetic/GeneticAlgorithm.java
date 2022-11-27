@@ -3,6 +3,8 @@ package Genetic;
 import File.FileHandler;
 import Genetic.Individual;
 import java.util.List;
+
+import jdk.swing.interop.SwingInterOpUtils;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Instances;
 import weka.classifiers.evaluation.Evaluation;
@@ -75,7 +77,7 @@ public class GeneticAlgorithm {
         FileOutputStream salida = new FileOutputStream(nombreFile);
         BufferedWriter buf = new BufferedWriter(new OutputStreamWriter(salida));
         buf.write("Neuronas  |  Capas  |  Epocas | Learning Rate | Momentum | Accuracy\n");
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < this.n; i++) {
             buf.write("    " + Double.toString(generation[i].getNumNeuronsInt()) + "    |    " + Double.toString(generation[i].getNumHiddenLayersInt()) + "   |    " + Integer.toString(generation[i].getNumEpochsInt()) + "  |      " + Double.toString(generation[i].getLearningRateDouble()) + "      |     " + Double.toString(generation[i].getMomentumDouble()) + "   | " + Double.toString(generation[i].getAccuracy()) + "\n");
         }
         buf.write("\n");
@@ -168,84 +170,100 @@ public class GeneticAlgorithm {
         }
     }
     private void mutate(Individual[][] couples){
-        Individual p = new Individual(); //COMENTARIOS EN ESPAÑOL PARA EVITAR CONFUSIÓN AL PROFESOR POR FAVOR
-        //(Y DE PASO TAMBIÉN EVITAR LA PENA DE CORREGIRLES)
+        Individual p = new Individual();
         int n = 0;
-        String temp;
-        int random_int,random_int2;
+        String temp,aux,newString;
+        int random_int,random_int2,descriptor;
         int max = 4; int min = 0; int k;
         temp="";
+        aux="";
 
         //modificar un bit de 2 hijos aleatorios
 
         for(int i=0;i<2; i++) {
             random_int = (int)Math.floor(Math.random()*(max-min+1)+min);//para la fila a mutar
-            random_int2 = (int)(Math.random()*5+1); //descriptor
-            switch (random_int2) {
+            descriptor = (int)(Math.random()*5+1); //descriptor
+            switch (descriptor) {
                 case 1://numNeurons
-                    n = couples[random_int][2].getNumNeuronsString().length()-1;
+                    n = couples[random_int][2].getNumNeuronsString().length();
+                    System.out.println("Hijo de pareja "+random_int+" Numero de neuronas: "+couples[random_int][2].getNumNeuronsString()+"\tn: "+n);
                     temp = couples[random_int][2].getNumNeuronsString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
-                        String newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
                     } else {
-                        String newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    p.setNumNeuronsString(temp);
+                    aux = couples[random_int][2].getNumNeuronsString();
+                    couples[random_int][2].setNumNeuronsString(newString);
+                    //p.setNumNeuronsString(temp);
 
-                    couples[i][2] = p;
+                    //couples[i][2] = p;
+                    System.out.println("Hecho numNeurons");
                     break;
                 case 2://HiddenLayers
-                    n = couples[random_int][2].getNumHiddenLayersString().length()-1;
+                    n = couples[random_int][2].getNumHiddenLayersString().length();
+                    System.out.println("Hijo de pareja "+random_int+" Capas ocultas: "+couples[random_int][2].getNumHiddenLayersString()+"\tn: "+n);
                     temp = couples[random_int][2].getNumHiddenLayersString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
-                        String newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
                     } else {
-                        String newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    p.setNumHiddenLayersString(temp);
-
-                    couples[i][2] = p;
+                    //p.setNumHiddenLayersString(temp);
+                    aux = couples[random_int][2].getNumHiddenLayersString();
+                    couples[random_int][2].setNumHiddenLayersString(newString);
+                    //couples[i][2] = p;
+                    System.out.println("Hecho capas ocultas");
                     break;
                 case 3://Epochs
-                    n = couples[random_int][2].getNumEpochsString().length()-1;
+                    n = couples[random_int][2].getNumEpochsString().length();
+                    System.out.println("Hijo de pareja"+random_int+"Numero de epocas: "+couples[random_int][2].getNumEpochsString()+"\tn: "+n);
                     temp = couples[random_int][2].getNumEpochsString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
-                        String newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
                     } else {
-                        String newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    p.setNumEpochsString(temp);
-
-                    couples[i][2] = p;
+                    //p.setNumEpochsString(temp);
+                    aux = couples[random_int][2].getNumEpochsString();
+                    couples[random_int][2].setNumEpochsString(newString);
+                    //couples[i][2] = p;
+                    System.out.println("Hecho numero de epocas");
                     break;
                 case 4://L.R.
-                    n = couples[random_int][2].getLearningRateString().length()-1;
+                    n = couples[random_int][2].getLearningRateString().length();
+                    System.out.println("Hijo de pareja"+random_int+"Learning rate: "+couples[random_int][2].getLearningRateString()+"\tn: "+n);
                     temp = couples[random_int][2].getLearningRateString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
-                        String newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
                     } else {
-                        String newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    p.setLearningRateString(temp);
-
-                    couples[i][2] = p;
+                   // p.setLearningRateString(temp);
+                    aux = couples[random_int][2].getLearningRateString();
+                    couples[random_int][2].setLearningRateString(newString);
+                    //couples[i][2] = p;
+                    System.out.println("Hecho learning rate");
                     break;
                 case 5://Momentum
-                    n = couples[random_int][2].getMomentumString().length()-1;
+                    n = couples[random_int][2].getMomentumString().length();
+                    System.out.println("Hijo de pareja"+random_int+"Momentum: "+couples[random_int][2].getMomentumString()+"\tn: "+n);
                     temp = couples[random_int][2].getMomentumString();
                     random_int2 = (int) (Math.random() * n + 0);
                     if (temp.charAt(random_int2) == '1') {
-                        String newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '0' + temp.substring(random_int2 + 1);
                     } else {
-                        String newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
+                        newString = temp.substring(0, random_int2) + '1' + temp.substring(random_int2 + 1);
                     }
-                    p.setMomentumString(temp);
-
-                    couples[i][2] = p;
+                    //p.setMomentumString(temp);
+                    aux = couples[random_int][2].getMomentumString();
+                    couples[random_int][2].setMomentumString(newString);
+                    //couples[i][2] = p;
+                    System.out.println("Hecho momentum");
                     break;
                 default:
                     System.out.println("ERROR");
@@ -253,11 +271,31 @@ public class GeneticAlgorithm {
 
             }
             if(!couples[random_int][2].validate()){
+                System.out.println("Hijo "+random_int+" no salio mutacion");
+                switch(descriptor){
+                    case 1:
+                        couples[random_int][2].setNumNeuronsString(aux);
+                        break;
+                    case 2:
+                        couples[random_int][2].setNumHiddenLayersString(aux);
+                        break;
+                    case 3:
+                        couples[random_int][2].setNumEpochsString(aux);
+                        break;
+                    case 4:
+                        couples[random_int][2].setLearningRateString(aux);
+                        break;
+                    case 5:
+                        couples[random_int][2].setMomentumString(aux);
+                        break;
+                }
                 i--;
             }else{
-                //nothing
+                System.out.println("Hijo "+random_int+" mutado");
             }
-            //if de couples[random_2][2] llamar a validate si es falso decrementar la variable de control del ciclo
+            temp="";
+            aux="";
+            newString = "";
         }
     }
 
@@ -278,7 +316,9 @@ public class GeneticAlgorithm {
 
         mate(couples);
 
+        //Obtiene la ubicación
         Individual p;//aux
+        k=0;
         while(k<generation.length){
             p = generation[k];
             if(p.getLearningRateDouble() == 0.0 && p.getMomentumDouble() == 0.0){
@@ -287,6 +327,7 @@ public class GeneticAlgorithm {
             k++;
         }
         k--;
+        System.out.println("Hijos creados: ");
         for(int i=0; i<couples.length;i++){ //impresion antes
             System.out.println(couples[i][2]);
         }
