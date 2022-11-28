@@ -357,16 +357,25 @@ public class GeneticAlgorithm {
             }
         }
         int max = 14; int min = 0; int k=0; //15 parejas
+        if(n<30){
+            max=14;
+        }else
+            max=29;
         int random_int;
         //Asigna parejas
         System.out.println(couples.length);
         for(int i=0; i<couples.length;i++){//15 couples created
             for(int j=0; j<2;j++){
                 random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
-                if(j==1 && generation[random_int]==couples[i][0])   //Comprueba si no se trata del mismo individuo
+                if(j==1 && generation[random_int]==couples[i][0]) {   //Comprueba si no se trata del mismo individuo
                     j--;
-                else
-                    couples[i][j] = generation[random_int];
+                }else {
+                    if (generation[random_int].getNumNeuronsInt() != 0) {
+                        couples[i][j] = generation[random_int];
+                    }else {
+                        j--;
+                    }
+                }
             }
         }
         for(int i=0; i<couples.length;i++){//creating here the for loop, for an expected output :p
@@ -408,16 +417,17 @@ public class GeneticAlgorithm {
             FileReader file1,file2;
             for (int i = 0; i < n; i++) {
                 if(generation[i].getAccuracy()==0.0) {
-                    file1 = new FileReader("fold1.arff");
+                    file1 = new FileReader("fold2.arff");
                     train = new Instances(file1);
                     train.setClassIndex(train.numAttributes() - 1);
                     mlp.setLearningRate(generation[i].getLearningRateDouble());
                     mlp.setMomentum(generation[i].getMomentumDouble());
                     mlp.setTrainingTime(generation[i].getNumEpochsInt());
                     mlp.setHiddenLayers(generation[i].getNumHiddenLayersString());
+                    mlp.setValidationSetSize(1);
                     mlp.buildClassifier(train);
                     file1.close();
-                    file2 = new FileReader("fold2.arff");
+                    file2 = new FileReader("fold1.arff");
                     train = new Instances(file2);
                     train.setClassIndex(train.numAttributes() - 1);
                     eval = new Evaluation(train);
